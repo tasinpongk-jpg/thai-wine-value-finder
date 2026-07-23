@@ -1,0 +1,631 @@
+{
+ "items": [
+  {
+   "id": 568,
+   "sku": "0413772/21",
+   "name": "Bodegas Caro Amancaya",
+   "attribute_set_id": 9,
+   "price": 1170,
+   "status": 1,
+   "visibility": 4,
+   "type_id": "simple",
+   "created_at": "2018-07-11 00:54:38",
+   "updated_at": "2024-09-26 04:44:58",
+   "weight": 750,
+   "product_links": [],
+   "tier_prices": [],
+   "custom_attributes": [
+    {
+     "attribute_code": "short_description",
+     "value": "<h3><span style=\"font-size: large;\">Bodegas CARO</span></h3>\r\n<p>The idea of forming a partnership between Domaines Barons de Rothschild (Lafite) and the Catena family was born in 1999. The <strong>Bodegas CARO</strong> winery, in the heart of Mendoza, has been producing the wines since the 2003 vintage and serves as the anchor of the CARO project</p>\r\n<div id=\"gtx-trans\" style=\"position: absolute; left: 135px; top: 34.475px;\">\r\n<div class=\"gtx-trans-icon\"></div>\r\n</div>"
+    },
+    {
+     "attribute_code": "cost",
+     "value": "1380.0000"
+    },
+    {
+     "attribute_code": "meta_title",
+     "value": "Bodegas Caro Amancaya"
+    },
+    {
+     "attribute_code": "meta_keyword",
+     "value": "Bodegas Caro, Amancaya"
+    },
+    {
+     "attribute_code": "meta_description",
+     "value": "Bodegas Caro Amancaya"
+    },
+    {
+     "attribute_code": "image",
+     "value": "/b/e/bevman_product568-01.jpg"
+    },
+    {
+     "attribute_code": "small_image",
+     "value": "/b/e/bevman_product568-01.jpg"
+    },
+    {
+     "attribute_code": "thumbnail",
+     "value": "/b/e/bevman_product568-01.jpg"
+    },
+    {
+     "attribute_code": "category_ids",
+     "value": [
+      "3",
+      "32"
+     ]
+    },
+    {
+     "attribute_code": "options_container",
+     "value": "container2"
+    },
+    {
+     "attribute_code": "required_options",
+     "value": "0"
+    },
+    {
+     "attribute_code": "has_options",
+     "value": "0"
+    },
+    {
+     "attribute_code": "country_of_manufacture",
+     "value": "AR"
+    },
+    {
+     "attribute_code": "url_key",
+     "value": "bodegas-caro-amancaya"
+    },
+    {
+     "attribute_code": "swatch_image",
+     "value": "/b/e/bevman_product568-01.jpg"
+    },
+    {
+     "attribute_code": "tax_class_id",
+     "value": "5"
+    },
+    {
+     "attribute_code": "gift_message_available",
+     "value": "2"
+    },
+    {
+     "attribute_code": "hover_image",
+     "value": "/b/e/bevman_product568-01.jpg"
+    },
+    {
+     "attribute_code": "wine_type",
+     "value": "17"
+    },
+    {
+     "attribute_code": "wine_alcohol_level",
+     "value": "131"
+    },
+    {
+     "attribute_code": "wine_province_area",
+     "value": "170"
+    },
+    {
+     "attribute_code": "wine_tasting_note",
+     "value": "174"
+    },
+    {
+     "attribute_code": "wine_grape_varieties",
+     "value": "370"
+    },
+    {
+     "attribute_code": "wine_top_sellers",
+     "value": "0"
+    },
+    {
+     "attribute_code": "featured",
+     "value": "0"
+    },
+    {
+     "attribute_code": "wine_bottle_size",
+     "value": "372"
+    },
+    {
+     "attribute_code": "wine_body",
+     "value": "379"
+    },
+    {
+     "attribute_code": "aroma",
+     "value": "The nose presents aromas of cloves, white pepper, and raspberry. The sleek chocolate and tobacco finish has a pleasant racy edge."
+    },
+    {
+     "attribute_code": "wine_appearance",
+     "value": "Deep color with ruby and violet hints."
+    },
+    {
+     "attribute_code": "palate",
+     "value": "On the palate, the tannins are velvety with a long-lasting finish. Layer upon layer of refined flavors and lingering acidity can be appreciated after the bottle has been opened. This well-balanced wine can be drunk now, but will open up with more time."
+    },
+    {
+     "attribute_code": "country",
+     "value": "4"
+    },
+    {
+     "attribute_code": "wine_brand",
+     "value": "27"
+    },
+    {
+     "attribute_code": "vintage",
+     "value": "2013"
+    }
+   ]
+  },
+  {
+   "id": 569,
+   "sku": "0409359/22",
+   "name": "Bodegas Salentein Portillo Cabernet Sauvignon",
+   "attribute_set_id": 9,
+   "price": 710,
+   "status": 1,
+   "visibility": 4,
+   "type_id": "simple",
+   "created_at": "2018-07-12 00:44:16",
+   "updated_at": "2024-09-26 04:44:27",
+   "weight": 750,
+   "product_links": [],
+   "tier_prices": [],
+   "custom_attributes": [
+    {
+     "attribute_code": "description",
+     "value": "<h2><span style=\"font-size: medium;\">Tasting note: <strong>Bodegas Salentein Portillo Cabernet Sauvignon</strong></span></h2>\r\n<p><span style=\"font-size: 12pt; font-family: Calibri, sans-serif;\">A captivating wine, intensely red in color with inviting aromas of dark fruits and hints of spicy black pepper. A balanced structure creates a smooth, fruit-forward sensation in the mouth.</span></p>"
+    },
+    {
+     "attribute_code": "short_description",
+     "value": "<h3><span style=\"font-size: large;\">Bodegas Salentein </span></h3>\r\n<p>The <strong>Salentein estate</strong> is as rich in history as in vineyard character. Land now planted to grapes that once bore witness to great deeds and heroism. This goodwill was the work of the indigenous people. It is this delicate balance of old and new —of blending the tradition of long-celebrated European winemaking methods with the bold ingenuity of the New World- that defines the Salentein style.</p>"
+    },
+    {
+     "attribute_code": "cost",
+     "value": "810.0000"
+    },
+    {
+     "attribute_code": "meta_title",
+     "value": "Bodegas Salentein Portillo Cabernet Sauvignon"
+    },
+    {
+     "attribute_code": "meta_keyword",
+     "value": "Bodegas Salentein, Portillo Cabernet Sauvignon"
+    },
+    {
+     "attribute_code": "meta_description",
+     "value": "Bodegas Salentein Portillo Cabernet Sauvignon"
+    },
+    {
+     "attribute_code": "image",
+     "value": "/p/o/portillo_cabernet_sauvignon.jpg"
+    },
+    {
+     "attribute_code": "small_image",
+     "value": "/p/o/portillo_cabernet_sauvignon.jpg"
+    },
+    {
+     "attribute_code": "thumbnail",
+     "value": "/p/o/portillo_cabernet_sauvignon.jpg"
+    },
+    {
+     "attribute_code": "category_ids",
+     "value": [
+      "3",
+      "32"
+     ]
+    },
+    {
+     "attribute_code": "options_container",
+     "value": "container2"
+    },
+    {
+     "attribute_code": "required_options",
+     "value": "0"
+    },
+    {
+     "attribute_code": "has_options",
+     "value": "0"
+    },
+    {
+     "attribute_code": "country_of_manufacture",
+     "value": "AR"
+    },
+    {
+     "attribute_code": "url_key",
+     "value": "bodegas-salentein-portillo-cabernet-sauvignon"
+    },
+    {
+     "attribute_code": "swatch_image",
+     "value": "/p/o/portillo_cabernet_sauvignon.jpg"
+    },
+    {
+     "attribute_code": "tax_class_id",
+     "value": "5"
+    },
+    {
+     "attribute_code": "gift_message_available",
+     "value": "2"
+    },
+    {
+     "attribute_code": "hover_image",
+     "value": "/p/o/portillo_cabernet_sauvignon.jpg"
+    },
+    {
+     "attribute_code": "wine_type",
+     "value": "17"
+    },
+    {
+     "attribute_code": "wine_alcohol_level",
+     "value": "381"
+    },
+    {
+     "attribute_code": "wine_province_area",
+     "value": "170"
+    },
+    {
+     "attribute_code": "wine_tasting_note",
+     "value": "174"
+    },
+    {
+     "attribute_code": "wine_grape_varieties",
+     "value": "280"
+    },
+    {
+     "attribute_code": "wine_top_sellers",
+     "value": "0"
+    },
+    {
+     "attribute_code": "featured",
+     "value": "0"
+    },
+    {
+     "attribute_code": "wine_bottle_size",
+     "value": "372"
+    },
+    {
+     "attribute_code": "wine_body",
+     "value": "379"
+    },
+    {
+     "attribute_code": "aroma",
+     "value": "Fruity nose where aromas of pepper and peppers, blackberries and red fruits stand out."
+    },
+    {
+     "attribute_code": "wine_appearance",
+     "value": "Bright ruby ​​red colors."
+    },
+    {
+     "attribute_code": "palate",
+     "value": "juicy and balanced, with great varietal character."
+    },
+    {
+     "attribute_code": "country",
+     "value": "4"
+    },
+    {
+     "attribute_code": "wine_brand",
+     "value": "25"
+    },
+    {
+     "attribute_code": "vintage",
+     "value": "2014"
+    }
+   ]
+  },
+  {
+   "id": 570,
+   "sku": "0409361/23",
+   "name": "Bodegas Salentein Portillo Malbec",
+   "attribute_set_id": 9,
+   "price": 710,
+   "status": 1,
+   "visibility": 4,
+   "type_id": "simple",
+   "created_at": "2018-07-12 00:58:46",
+   "updated_at": "2024-10-01 07:23:29",
+   "weight": 750,
+   "product_links": [],
+   "tier_prices": [],
+   "custom_attributes": [
+    {
+     "attribute_code": "description",
+     "value": "<h2><span style=\"font-size: medium;\">Tasting note: <strong>Bodegas Salentein Portillo Malbec</strong></span></h2>\r\n<p><span style=\"font-size: 12pt; font-family: Calibri, sans-serif;\">Ruby-red wine with very intense purplish tints, displaying a fresh and fruity nose, enhanced by hints of plums, blackberries and a touch of vanilla. Fresh fruit flavors, supported by sweet and round tannins, and good structure contributed by oak. Long and fruity finish. A perfect companion for red meats and pasta.</span></p>"
+    },
+    {
+     "attribute_code": "short_description",
+     "value": "<h3><span style=\"font-size: large;\">Bodegas Salentein </span></h3>\r\n<p>The <strong>Salentein estate</strong> is as rich in history as in vineyard character. Land now planted to grapes that once bore witness to great deeds and heroism. This goodwill was the work of the indigenous people. It is this delicate balance of old and new —of blending the tradition of long-celebrated European winemaking methods with the bold ingenuity of the New World- that defines the Salentein style.</p>"
+    },
+    {
+     "attribute_code": "cost",
+     "value": "810.0000"
+    },
+    {
+     "attribute_code": "meta_title",
+     "value": "Bodegas Salentein Portillo Malbec"
+    },
+    {
+     "attribute_code": "meta_keyword",
+     "value": "Bodegas Salentein, Portillo Malbec"
+    },
+    {
+     "attribute_code": "meta_description",
+     "value": "Bodegas Salentein Portillo Malbec"
+    },
+    {
+     "attribute_code": "image",
+     "value": "/p/o/portillo_malbec.jpg"
+    },
+    {
+     "attribute_code": "small_image",
+     "value": "/p/o/portillo_malbec.jpg"
+    },
+    {
+     "attribute_code": "thumbnail",
+     "value": "/p/o/portillo_malbec.jpg"
+    },
+    {
+     "attribute_code": "category_ids",
+     "value": [
+      "3",
+      "32",
+      "12",
+      "13"
+     ]
+    },
+    {
+     "attribute_code": "options_container",
+     "value": "container2"
+    },
+    {
+     "attribute_code": "required_options",
+     "value": "0"
+    },
+    {
+     "attribute_code": "has_options",
+     "value": "0"
+    },
+    {
+     "attribute_code": "country_of_manufacture",
+     "value": "AR"
+    },
+    {
+     "attribute_code": "url_key",
+     "value": "bodegas-salentein-portillo-malbec"
+    },
+    {
+     "attribute_code": "swatch_image",
+     "value": "/p/o/portillo_malbec.jpg"
+    },
+    {
+     "attribute_code": "tax_class_id",
+     "value": "5"
+    },
+    {
+     "attribute_code": "gift_message_available",
+     "value": "2"
+    },
+    {
+     "attribute_code": "hover_image",
+     "value": "/p/o/portillo_malbec.jpg"
+    },
+    {
+     "attribute_code": "wine_type",
+     "value": "17"
+    },
+    {
+     "attribute_code": "wine_alcohol_level",
+     "value": "381"
+    },
+    {
+     "attribute_code": "wine_province_area",
+     "value": "170"
+    },
+    {
+     "attribute_code": "wine_tasting_note",
+     "value": "174"
+    },
+    {
+     "attribute_code": "wine_grape_varieties",
+     "value": "286"
+    },
+    {
+     "attribute_code": "wine_top_sellers",
+     "value": "0"
+    },
+    {
+     "attribute_code": "featured",
+     "value": "0"
+    },
+    {
+     "attribute_code": "wine_bottle_size",
+     "value": "372"
+    },
+    {
+     "attribute_code": "wine_body",
+     "value": "379"
+    },
+    {
+     "attribute_code": "aroma",
+     "value": "fresh red fruit (plum and blackberry) stand out without cooked or marmalade aromas. "
+    },
+    {
+     "attribute_code": "wine_appearance",
+     "value": "Bright and intense purplish red color. "
+    },
+    {
+     "attribute_code": "palate",
+     "value": "its entry is fresh thanks to its natural acidity, fruity sensation, round or ripe tannins and sweet finish. Balanced and intense wine with clear varietal character."
+    },
+    {
+     "attribute_code": "country",
+     "value": "4"
+    },
+    {
+     "attribute_code": "wine_brand",
+     "value": "25"
+    },
+    {
+     "attribute_code": "vintage",
+     "value": "2014"
+    }
+   ]
+  },
+  {
+   "id": 583,
+   "sku": "0502775/22",
+   "name": "Anakena Birdman Cabernet Sauvignon",
+   "attribute_set_id": 9,
+   "price": 670,
+   "status": 1,
+   "visibility": 4,
+   "type_id": "simple",
+   "created_at": "2018-07-19 03:59:19",
+   "updated_at": "2024-09-30 03:55:56",
+   "weight": 750,
+   "product_links": [],
+   "tier_prices": [],
+   "custom_attributes": [
+    {
+     "attribute_code": "description",
+     "value": "<h2><span style=\"font-size: medium;\">Tasting note: <strong>Anakena Birdman Cabernet Sauvignon</strong></span></h2>\r\n<p><span style=\"font-size: 12pt; font-family: Calibri, sans-serif;\">A full-bodied wine with bramble and plum characters, Birdman Cabernet Sauvignon has a rich palate packed with juicy fruit and a lingering finish</span></p>"
+    },
+    {
+     "attribute_code": "short_description",
+     "value": "<h3><span style=\"font-size: large;\">Anakena</span></h3>\r\n<p>Now easily in the top rank of Chilean wine producers <strong>Anakena</strong> is about quality and value. Good wines reflect the uniqueness of chosen soil and climate. Anakena is committed to seeking out singular terroirs which constitute the essence of</p>"
+    },
+    {
+     "attribute_code": "cost",
+     "value": "650.0000"
+    },
+    {
+     "attribute_code": "meta_title",
+     "value": "สั่งซื้อไวน์ Anakena Birdman Cabernet Sauvignon, ขายไวน์ Birdman Cabernet Sauvignon"
+    },
+    {
+     "attribute_code": "meta_keyword",
+     "value": "สั่งซื้อไวน์, Anakena Birdman Cabernet Sauvignon, ขายไวน์ Birdman Cabernet Sauvignon, Wine Anakena Birdman Cabernet Sauvignon, Birdman Cabernet Sauvignon, Wine Delivery, จำหน่ายไวน์ Anakena Birdman Cabernet Sauvignon, ไวน์ Anakena, Anakena"
+    },
+    {
+     "attribute_code": "meta_description",
+     "value": "สั่งซื้อไวน์ Anakena Birdman Cabernet Sauvignon, ขายไวน์ Birdman Cabernet Sauvignon, Wine Anakena Birdman Cabernet Sauvignon, Wine Delivery Birdman Cabernet Sauvignon, จำหน่ายไวน์ Anakena Birdman Cabernet Sauvignon, ไวน์ Anakena Birdman Cabernet Sauvignon"
+    },
+    {
+     "attribute_code": "image",
+     "value": "/a/n/anakena_birdman_cabernet_sauvignon.jpg"
+    },
+    {
+     "attribute_code": "small_image",
+     "value": "/a/n/anakena_birdman_cabernet_sauvignon.jpg"
+    },
+    {
+     "attribute_code": "thumbnail",
+     "value": "/a/n/anakena_birdman_cabernet_sauvignon.jpg"
+    },
+    {
+     "attribute_code": "category_ids",
+     "value": [
+      "3",
+      "36"
+     ]
+    },
+    {
+     "attribute_code": "options_container",
+     "value": "container2"
+    },
+    {
+     "attribute_code": "required_options",
+     "value": "0"
+    },
+    {
+     "attribute_code": "has_options",
+     "value": "0"
+    },
+    {
+     "attribute_code": "country_of_manufacture",
+     "value": "CL"
+    },
+    {
+     "attribute_code": "url_key",
+     "value": "anakena-birdman-cabernet-sauvignon"
+    },
+    {
+     "attribute_code": "msrp_display_actual_price_type",
+     "value": "0"
+    },
+    {
+     "attribute_code": "swatch_image",
+     "value": "/a/n/anakena_birdman_cabernet_sauvignon.jpg"
+    },
+    {
+     "attribute_code": "tax_class_id",
+     "value": "5"
+    },
+    {
+     "attribute_code": "gift_message_available",
+     "value": "2"
+    },
+    {
+     "attribute_code": "hover_image",
+     "value": "/a/n/anakena_birdman_cabernet_sauvignon.jpg"
+    },
+    {
+     "attribute_code": "wine_type",
+     "value": "17"
+    },
+    {
+     "attribute_code": "wine_alcohol_level",
+     "value": "128"
+    },
+    {
+     "attribute_code": "wine_province_area",
+     "value": "172"
+    },
+    {
+     "attribute_code": "wine_tasting_note",
+     "value": "174"
+    },
+    {
+     "attribute_code": "wine_grape_varieties",
+     "value": "280"
+    },
+    {
+     "attribute_code": "wine_top_sellers",
+     "value": "0"
+    },
+    {
+     "attribute_code": "featured",
+     "value": "0"
+    },
+    {
+     "attribute_code": "wine_bottle_size",
+     "value": "372"
+    },
+    {
+     "attribute_code": "wine_body",
+     "value": "377"
+    },
+    {
+     "attribute_code": "aroma",
+     "value": "This wine has black fruits aromas such as Blackcurrant, blackberry with hint of spice"
+    },
+    {
+     "attribute_code": "wine_appearance",
+     "value": "Deep ruby colors with crimson hue"
+    },
+    {
+     "attribute_code": "palate",
+     "value": "The wine has full of black fruit flavours with balance of acidity, tanin and fruit flavours.   "
+    },
+    {
+     "attribute_code": "country",
+     "value": "6"
+    },
+    {
+     "attribute_code": "wine_brand",
+     "value": "38"
+    },
+    {
+     "attribute_code": "vintage",
+     "value": "2015"
+    }
+   ]
+  }
+ ],
+ "total_count": 1143
+}

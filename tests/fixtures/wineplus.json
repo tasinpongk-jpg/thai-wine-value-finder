@@ -1,0 +1,580 @@
+[
+ {
+  "id": 58534,
+  "name": "CASTLEBRAE Marlborough Sauvignon Blanc",
+  "slug": "castlebrae-marlborough-sauvignon-blanc",
+  "parent": 0,
+  "type": "simple",
+  "variation": "",
+  "permalink": "https://wineplus.co.th/product/castlebrae-marlborough-sauvignon-blanc/",
+  "sku": "",
+  "short_description": "<p>WINZ-W027</p>",
+  "description": "<div class=\"tinv-wraper woocommerce tinv-wishlist tinvwl-shortcode-add-to-cart tinvwl-loop-button-wrapper tinvwl-woocommerce_product_get_description\" data-tinvwl_product_id=\"58534\">\n<div class=\"tinv-wishlist-clear\"></div>\n<p><a role=\"button\" name=\"add-to-favorites\" aria-label=\"Add to Favorites\" class=\"tinvwl_add_to_wishlist_button tinvwl-icon-heart  tinvwl-position-after tinvwl-loop\" data-tinv-wl-list=\"[]\" data-tinv-wl-product=\"58534\" data-tinv-wl-productvariation=\"0\" data-tinv-wl-productvariations=\"[]\" data-tinv-wl-producttype=\"simple\" data-tinv-wl-action=\"add\"><span class=\"tinvwl_add_to_wishlist-text\">Add to Favorites</span></a></p>\n<div class=\"tinv-wishlist-clear\"></div>\n<div class=\"tinvwl-tooltip\">Add to Favorites</div>\n</div>",
+  "on_sale": false,
+  "prices": {
+   "price": "78000",
+   "regular_price": "78000",
+   "sale_price": "78000",
+   "price_range": null,
+   "currency_code": "THB",
+   "currency_symbol": "฿",
+   "currency_minor_unit": 2,
+   "currency_decimal_separator": ".",
+   "currency_thousand_separator": ",",
+   "currency_prefix": "฿",
+   "currency_suffix": ""
+  },
+  "price_html": "<span class=\"woocommerce-Price-amount amount\"><span class=\"woocommerce-Price-currencySymbol\">&#3647;</span>780.00</span>",
+  "average_rating": "0",
+  "review_count": 0,
+  "images": [
+   {
+    "id": 58535,
+    "src": "https://wineplus.co.th/wp-content/uploads/2025/10/WINZ-W02774347.png",
+    "thumbnail": "https://wineplus.co.th/wp-content/uploads/2025/10/WINZ-W02774347-300x300.png",
+    "srcset": "https://wineplus.co.th/wp-content/uploads/2025/10/WINZ-W02774347.png 834w, https://wineplus.co.th/wp-content/uploads/2025/10/WINZ-W02774347-600x600.png 600w, https://wineplus.co.th/wp-content/uploads/2025/10/WINZ-W02774347-224x224.png 224w, https://wineplus.co.th/wp-content/uploads/2025/10/WINZ-W02774347-768x768.png 768w, https://wineplus.co.th/wp-content/uploads/2025/10/WINZ-W02774347-300x300.png 300w, https://wineplus.co.th/wp-content/uploads/2025/10/WINZ-W02774347-100x100.png 100w",
+    "sizes": "(max-width: 834px) 100vw, 834px",
+    "thumbnail_srcset": "https://wineplus.co.th/wp-content/uploads/2025/10/WINZ-W02774347-300x300.png 300w, https://wineplus.co.th/wp-content/uploads/2025/10/WINZ-W02774347-600x600.png 600w, https://wineplus.co.th/wp-content/uploads/2025/10/WINZ-W02774347-224x224.png 224w, https://wineplus.co.th/wp-content/uploads/2025/10/WINZ-W02774347-768x768.png 768w, https://wineplus.co.th/wp-content/uploads/2025/10/WINZ-W02774347-100x100.png 100w, https://wineplus.co.th/wp-content/uploads/2025/10/WINZ-W02774347.png 834w",
+    "thumbnail_sizes": "(max-width: 300px) 100vw, 300px",
+    "name": "WINZ-W027[74347]",
+    "alt": ""
+   }
+  ],
+  "categories": [
+   {
+    "id": 449,
+    "name": "New Zealand",
+    "slug": "new-zealand",
+    "link": "https://wineplus.co.th/catalog/whites-wine-delivery-thailand/new-zealand/"
+   },
+   {
+    "id": 445,
+    "name": "Whites",
+    "slug": "whites-wine-delivery-thailand",
+    "link": "https://wineplus.co.th/catalog/whites-wine-delivery-thailand/"
+   }
+  ],
+  "tags": [
+   {
+    "id": 435,
+    "name": "Te PA",
+    "slug": "te-pa",
+    "link": "https://wineplus.co.th/product-tag/te-pa/"
+   }
+  ],
+  "brands": [],
+  "attributes": [
+   {
+    "id": 0,
+    "name": "Bottle size",
+    "taxonomy": null,
+    "has_variations": false,
+    "terms": [
+     {
+      "id": 0,
+      "name": "75cl",
+      "slug": "75cl"
+     },
+     {
+      "id": 0,
+      "name": "150cl",
+      "slug": "150cl"
+     }
+    ]
+   }
+  ],
+  "variations": [],
+  "grouped_products": [],
+  "has_options": false,
+  "is_purchasable": true,
+  "is_in_stock": true,
+  "is_on_backorder": false,
+  "low_stock_remaining": null,
+  "stock_availability": {
+   "text": "",
+   "class": "in-stock"
+  },
+  "sold_individually": false,
+  "weight": "59701054",
+  "dimensions": {
+   "length": "",
+   "width": "",
+   "height": ""
+  },
+  "formatted_weight": "59701054 kg",
+  "formatted_dimensions": "N/A",
+  "add_to_cart": {
+   "text": "Add to list",
+   "description": "Add to cart: &ldquo;CASTLEBRAE Marlborough Sauvignon Blanc&rdquo;",
+   "url": "/wp-json/wc/store/v1/products?per_page=4&#038;page=1&#038;add-to-cart=58534",
+   "single_text": "Add to list",
+   "minimum": 1,
+   "maximum": 9999,
+   "multiple_of": 1
+  },
+  "is_password_protected": false,
+  "extensions": {
+   "woocommerce_google_analytics_integration": {
+    "identifier": "58534"
+   }
+  },
+  "_links": {
+   "self": [
+    {
+     "href": "https://wineplus.co.th/wp-json/wc/store/v1/products/58534",
+     "targetHints": {
+      "allow": [
+       "GET"
+      ]
+     }
+    }
+   ],
+   "collection": [
+    {
+     "href": "https://wineplus.co.th/wp-json/wc/store/v1/products"
+    }
+   ],
+   "related": [
+    {
+     "embeddable": true,
+     "href": "https://wineplus.co.th/wp-json/wc/store/v1/products?related=58534&per_page=10"
+    }
+   ]
+  }
+ },
+ {
+  "id": 58333,
+  "name": "PASSION DE LOS ANDES Corte Gran Collection Mendoza",
+  "slug": "passion-de-los-andes-corte-gran-collection-mendoza",
+  "parent": 0,
+  "type": "simple",
+  "variation": "",
+  "permalink": "https://wineplus.co.th/product/passion-de-los-andes-corte-gran-collection-mendoza/",
+  "sku": "",
+  "short_description": "<p>WIAR-R025</p>",
+  "description": "<div class=\"tinv-wraper woocommerce tinv-wishlist tinvwl-shortcode-add-to-cart tinvwl-loop-button-wrapper tinvwl-woocommerce_product_get_description\" data-tinvwl_product_id=\"58333\">\n<div class=\"tinv-wishlist-clear\"></div>\n<p><a role=\"button\" name=\"add-to-favorites\" aria-label=\"Add to Favorites\" class=\"tinvwl_add_to_wishlist_button tinvwl-icon-heart  tinvwl-position-after tinvwl-loop\" data-tinv-wl-list=\"[]\" data-tinv-wl-product=\"58333\" data-tinv-wl-productvariation=\"0\" data-tinv-wl-productvariations=\"[]\" data-tinv-wl-producttype=\"simple\" data-tinv-wl-action=\"add\"><span class=\"tinvwl_add_to_wishlist-text\">Add to Favorites</span></a></p>\n<div class=\"tinv-wishlist-clear\"></div>\n<div class=\"tinvwl-tooltip\">Add to Favorites</div>\n</div>",
+  "on_sale": false,
+  "prices": {
+   "price": "142000",
+   "regular_price": "142000",
+   "sale_price": "142000",
+   "price_range": null,
+   "currency_code": "THB",
+   "currency_symbol": "฿",
+   "currency_minor_unit": 2,
+   "currency_decimal_separator": ".",
+   "currency_thousand_separator": ",",
+   "currency_prefix": "฿",
+   "currency_suffix": ""
+  },
+  "price_html": "<span class=\"woocommerce-Price-amount amount\"><span class=\"woocommerce-Price-currencySymbol\">&#3647;</span>1,420.00</span>",
+  "average_rating": "0",
+  "review_count": 0,
+  "images": [
+   {
+    "id": 58334,
+    "src": "https://wineplus.co.th/wp-content/uploads/2025/01/WIAR-R025.png",
+    "thumbnail": "https://wineplus.co.th/wp-content/uploads/2025/01/WIAR-R025-300x300.png",
+    "srcset": "https://wineplus.co.th/wp-content/uploads/2025/01/WIAR-R025.png 1667w, https://wineplus.co.th/wp-content/uploads/2025/01/WIAR-R025-600x600.png 600w, https://wineplus.co.th/wp-content/uploads/2025/01/WIAR-R025-1024x1024.png 1024w, https://wineplus.co.th/wp-content/uploads/2025/01/WIAR-R025-224x224.png 224w, https://wineplus.co.th/wp-content/uploads/2025/01/WIAR-R025-768x768.png 768w, https://wineplus.co.th/wp-content/uploads/2025/01/WIAR-R025-1536x1536.png 1536w, https://wineplus.co.th/wp-content/uploads/2025/01/WIAR-R025-300x300.png 300w, https://wineplus.co.th/wp-content/uploads/2025/01/WIAR-R025-100x100.png 100w",
+    "sizes": "(max-width: 1667px) 100vw, 1667px",
+    "thumbnail_srcset": "https://wineplus.co.th/wp-content/uploads/2025/01/WIAR-R025-300x300.png 300w, https://wineplus.co.th/wp-content/uploads/2025/01/WIAR-R025-600x600.png 600w, https://wineplus.co.th/wp-content/uploads/2025/01/WIAR-R025-1024x1024.png 1024w, https://wineplus.co.th/wp-content/uploads/2025/01/WIAR-R025-224x224.png 224w, https://wineplus.co.th/wp-content/uploads/2025/01/WIAR-R025-768x768.png 768w, https://wineplus.co.th/wp-content/uploads/2025/01/WIAR-R025-1536x1536.png 1536w, https://wineplus.co.th/wp-content/uploads/2025/01/WIAR-R025-100x100.png 100w, https://wineplus.co.th/wp-content/uploads/2025/01/WIAR-R025.png 1667w",
+    "thumbnail_sizes": "(max-width: 300px) 100vw, 300px",
+    "name": "WIAR-R025",
+    "alt": ""
+   }
+  ],
+  "categories": [
+   {
+    "id": 461,
+    "name": "Argentina",
+    "slug": "argentina-reds",
+    "link": "https://wineplus.co.th/catalog/reds-wine-delivery-thailand/argentina-reds/"
+   },
+   {
+    "id": 444,
+    "name": "Reds",
+    "slug": "reds-wine-delivery-thailand",
+    "link": "https://wineplus.co.th/catalog/reds-wine-delivery-thailand/"
+   }
+  ],
+  "tags": [
+   {
+    "id": 410,
+    "name": "TRAPICHE",
+    "slug": "trapiche",
+    "link": "https://wineplus.co.th/product-tag/trapiche/"
+   }
+  ],
+  "brands": [],
+  "attributes": [
+   {
+    "id": 0,
+    "name": "Bottle size",
+    "taxonomy": null,
+    "has_variations": false,
+    "terms": [
+     {
+      "id": 0,
+      "name": "75cl",
+      "slug": "75cl"
+     },
+     {
+      "id": 0,
+      "name": "150cl",
+      "slug": "150cl"
+     }
+    ]
+   }
+  ],
+  "variations": [],
+  "grouped_products": [],
+  "has_options": false,
+  "is_purchasable": true,
+  "is_in_stock": true,
+  "is_on_backorder": false,
+  "low_stock_remaining": null,
+  "stock_availability": {
+   "text": "",
+   "class": "in-stock"
+  },
+  "sold_individually": false,
+  "weight": "59701054",
+  "dimensions": {
+   "length": "",
+   "width": "",
+   "height": ""
+  },
+  "formatted_weight": "59701054 kg",
+  "formatted_dimensions": "N/A",
+  "add_to_cart": {
+   "text": "Add to list",
+   "description": "Add to cart: &ldquo;PASSION DE LOS ANDES Corte Gran Collection Mendoza&rdquo;",
+   "url": "/wp-json/wc/store/v1/products?per_page=4&#038;page=1&#038;add-to-cart=58333",
+   "single_text": "Add to list",
+   "minimum": 1,
+   "maximum": 9999,
+   "multiple_of": 1
+  },
+  "is_password_protected": false,
+  "extensions": {
+   "woocommerce_google_analytics_integration": {
+    "identifier": "58333"
+   }
+  },
+  "_links": {
+   "self": [
+    {
+     "href": "https://wineplus.co.th/wp-json/wc/store/v1/products/58333",
+     "targetHints": {
+      "allow": [
+       "GET"
+      ]
+     }
+    }
+   ],
+   "collection": [
+    {
+     "href": "https://wineplus.co.th/wp-json/wc/store/v1/products"
+    }
+   ],
+   "related": [
+    {
+     "embeddable": true,
+     "href": "https://wineplus.co.th/wp-json/wc/store/v1/products?related=58333&per_page=10"
+    }
+   ]
+  }
+ },
+ {
+  "id": 58331,
+  "name": "TRAPICHE Alaris Chardonnay",
+  "slug": "trapiche-alaris-chardonnay",
+  "parent": 0,
+  "type": "simple",
+  "variation": "",
+  "permalink": "https://wineplus.co.th/product/trapiche-alaris-chardonnay/",
+  "sku": "",
+  "short_description": "<p>WIAR-W009</p>",
+  "description": "<div class=\"tinv-wraper woocommerce tinv-wishlist tinvwl-shortcode-add-to-cart tinvwl-loop-button-wrapper tinvwl-woocommerce_product_get_description\" data-tinvwl_product_id=\"58331\">\n<div class=\"tinv-wishlist-clear\"></div>\n<p><a role=\"button\" name=\"add-to-favorites\" aria-label=\"Add to Favorites\" class=\"tinvwl_add_to_wishlist_button tinvwl-icon-heart  tinvwl-position-after tinvwl-loop\" data-tinv-wl-list=\"[]\" data-tinv-wl-product=\"58331\" data-tinv-wl-productvariation=\"0\" data-tinv-wl-productvariations=\"[]\" data-tinv-wl-producttype=\"simple\" data-tinv-wl-action=\"add\"><span class=\"tinvwl_add_to_wishlist-text\">Add to Favorites</span></a></p>\n<div class=\"tinv-wishlist-clear\"></div>\n<div class=\"tinvwl-tooltip\">Add to Favorites</div>\n</div>",
+  "on_sale": false,
+  "prices": {
+   "price": "59000",
+   "regular_price": "59000",
+   "sale_price": "59000",
+   "price_range": null,
+   "currency_code": "THB",
+   "currency_symbol": "฿",
+   "currency_minor_unit": 2,
+   "currency_decimal_separator": ".",
+   "currency_thousand_separator": ",",
+   "currency_prefix": "฿",
+   "currency_suffix": ""
+  },
+  "price_html": "<span class=\"woocommerce-Price-amount amount\"><span class=\"woocommerce-Price-currencySymbol\">&#3647;</span>590.00</span>",
+  "average_rating": "0",
+  "review_count": 0,
+  "images": [
+   {
+    "id": 58332,
+    "src": "https://wineplus.co.th/wp-content/uploads/2025/01/WIAR-W009.png",
+    "thumbnail": "https://wineplus.co.th/wp-content/uploads/2025/01/WIAR-W009-300x300.png",
+    "srcset": "https://wineplus.co.th/wp-content/uploads/2025/01/WIAR-W009.png 1667w, https://wineplus.co.th/wp-content/uploads/2025/01/WIAR-W009-600x600.png 600w, https://wineplus.co.th/wp-content/uploads/2025/01/WIAR-W009-1024x1024.png 1024w, https://wineplus.co.th/wp-content/uploads/2025/01/WIAR-W009-224x224.png 224w, https://wineplus.co.th/wp-content/uploads/2025/01/WIAR-W009-768x768.png 768w, https://wineplus.co.th/wp-content/uploads/2025/01/WIAR-W009-1536x1536.png 1536w, https://wineplus.co.th/wp-content/uploads/2025/01/WIAR-W009-300x300.png 300w, https://wineplus.co.th/wp-content/uploads/2025/01/WIAR-W009-100x100.png 100w",
+    "sizes": "(max-width: 1667px) 100vw, 1667px",
+    "thumbnail_srcset": "https://wineplus.co.th/wp-content/uploads/2025/01/WIAR-W009-300x300.png 300w, https://wineplus.co.th/wp-content/uploads/2025/01/WIAR-W009-600x600.png 600w, https://wineplus.co.th/wp-content/uploads/2025/01/WIAR-W009-1024x1024.png 1024w, https://wineplus.co.th/wp-content/uploads/2025/01/WIAR-W009-224x224.png 224w, https://wineplus.co.th/wp-content/uploads/2025/01/WIAR-W009-768x768.png 768w, https://wineplus.co.th/wp-content/uploads/2025/01/WIAR-W009-1536x1536.png 1536w, https://wineplus.co.th/wp-content/uploads/2025/01/WIAR-W009-100x100.png 100w, https://wineplus.co.th/wp-content/uploads/2025/01/WIAR-W009.png 1667w",
+    "thumbnail_sizes": "(max-width: 300px) 100vw, 300px",
+    "name": "WIAR-W009",
+    "alt": ""
+   }
+  ],
+  "categories": [
+   {
+    "id": 605,
+    "name": "Argentina",
+    "slug": "argentina-whites",
+    "link": "https://wineplus.co.th/catalog/whites-wine-delivery-thailand/argentina-whites/"
+   },
+   {
+    "id": 445,
+    "name": "Whites",
+    "slug": "whites-wine-delivery-thailand",
+    "link": "https://wineplus.co.th/catalog/whites-wine-delivery-thailand/"
+   }
+  ],
+  "tags": [
+   {
+    "id": 410,
+    "name": "TRAPICHE",
+    "slug": "trapiche",
+    "link": "https://wineplus.co.th/product-tag/trapiche/"
+   }
+  ],
+  "brands": [],
+  "attributes": [
+   {
+    "id": 0,
+    "name": "Bottle size",
+    "taxonomy": null,
+    "has_variations": false,
+    "terms": [
+     {
+      "id": 0,
+      "name": "75cl",
+      "slug": "75cl"
+     },
+     {
+      "id": 0,
+      "name": "150cl",
+      "slug": "150cl"
+     }
+    ]
+   }
+  ],
+  "variations": [],
+  "grouped_products": [],
+  "has_options": false,
+  "is_purchasable": true,
+  "is_in_stock": true,
+  "is_on_backorder": false,
+  "low_stock_remaining": null,
+  "stock_availability": {
+   "text": "",
+   "class": "in-stock"
+  },
+  "sold_individually": false,
+  "weight": "59701054",
+  "dimensions": {
+   "length": "",
+   "width": "",
+   "height": ""
+  },
+  "formatted_weight": "59701054 kg",
+  "formatted_dimensions": "N/A",
+  "add_to_cart": {
+   "text": "Add to list",
+   "description": "Add to cart: &ldquo;TRAPICHE Alaris Chardonnay&rdquo;",
+   "url": "/wp-json/wc/store/v1/products?per_page=4&#038;page=1&#038;add-to-cart=58331",
+   "single_text": "Add to list",
+   "minimum": 1,
+   "maximum": 9999,
+   "multiple_of": 1
+  },
+  "is_password_protected": false,
+  "extensions": {
+   "woocommerce_google_analytics_integration": {
+    "identifier": "58331"
+   }
+  },
+  "_links": {
+   "self": [
+    {
+     "href": "https://wineplus.co.th/wp-json/wc/store/v1/products/58331",
+     "targetHints": {
+      "allow": [
+       "GET"
+      ]
+     }
+    }
+   ],
+   "collection": [
+    {
+     "href": "https://wineplus.co.th/wp-json/wc/store/v1/products"
+    }
+   ],
+   "related": [
+    {
+     "embeddable": true,
+     "href": "https://wineplus.co.th/wp-json/wc/store/v1/products?related=58331&per_page=10"
+    }
+   ]
+  }
+ },
+ {
+  "id": 58327,
+  "name": "PRETENCIOUS COQ Cabernet Sauvignon Pays d’ Oc IGP",
+  "slug": "pretentious-coq-cabernet-sauvignon-pays-doc-igp",
+  "parent": 0,
+  "type": "simple",
+  "variation": "",
+  "permalink": "https://wineplus.co.th/product/pretentious-coq-cabernet-sauvignon-pays-doc-igp/",
+  "sku": "",
+  "short_description": "<div class=\"page\" title=\"Page 16\">\n<div class=\"section\">\n<div class=\"layoutArea\">\n<div class=\"column\">\n<p>WIFR-R317</p>\n</div>\n</div>\n</div>\n</div>",
+  "description": "<div class=\"tinv-wraper woocommerce tinv-wishlist tinvwl-shortcode-add-to-cart tinvwl-loop-button-wrapper tinvwl-woocommerce_product_get_description\" data-tinvwl_product_id=\"58327\">\n<div class=\"tinv-wishlist-clear\"></div>\n<p><a role=\"button\" name=\"add-to-favorites\" aria-label=\"Add to Favorites\" class=\"tinvwl_add_to_wishlist_button tinvwl-icon-heart  tinvwl-position-after tinvwl-loop\" data-tinv-wl-list=\"[]\" data-tinv-wl-product=\"58327\" data-tinv-wl-productvariation=\"0\" data-tinv-wl-productvariations=\"[]\" data-tinv-wl-producttype=\"simple\" data-tinv-wl-action=\"add\"><span class=\"tinvwl_add_to_wishlist-text\">Add to Favorites</span></a></p>\n<div class=\"tinv-wishlist-clear\"></div>\n<div class=\"tinvwl-tooltip\">Add to Favorites</div>\n</div>",
+  "on_sale": true,
+  "prices": {
+   "price": "47900",
+   "regular_price": "54000",
+   "sale_price": "47900",
+   "price_range": null,
+   "currency_code": "THB",
+   "currency_symbol": "฿",
+   "currency_minor_unit": 2,
+   "currency_decimal_separator": ".",
+   "currency_thousand_separator": ",",
+   "currency_prefix": "฿",
+   "currency_suffix": ""
+  },
+  "price_html": "<del aria-hidden=\"true\"><span class=\"woocommerce-Price-amount amount\"><span class=\"woocommerce-Price-currencySymbol\">&#3647;</span>540.00</span></del> <span class=\"screen-reader-text\">Original price was: &#3647;540.00.</span><ins aria-hidden=\"true\"><span class=\"woocommerce-Price-amount amount\"><span class=\"woocommerce-Price-currencySymbol\">&#3647;</span>479.00</span></ins><span class=\"screen-reader-text\">Current price is: &#3647;479.00.</span>",
+  "average_rating": "0",
+  "review_count": 0,
+  "images": [
+   {
+    "id": 58328,
+    "src": "https://wineplus.co.th/wp-content/uploads/2025/01/WIFR-R317.png",
+    "thumbnail": "https://wineplus.co.th/wp-content/uploads/2025/01/WIFR-R317-300x300.png",
+    "srcset": "https://wineplus.co.th/wp-content/uploads/2025/01/WIFR-R317.png 1667w, https://wineplus.co.th/wp-content/uploads/2025/01/WIFR-R317-600x600.png 600w, https://wineplus.co.th/wp-content/uploads/2025/01/WIFR-R317-1024x1024.png 1024w, https://wineplus.co.th/wp-content/uploads/2025/01/WIFR-R317-224x224.png 224w, https://wineplus.co.th/wp-content/uploads/2025/01/WIFR-R317-768x768.png 768w, https://wineplus.co.th/wp-content/uploads/2025/01/WIFR-R317-1536x1536.png 1536w, https://wineplus.co.th/wp-content/uploads/2025/01/WIFR-R317-300x300.png 300w, https://wineplus.co.th/wp-content/uploads/2025/01/WIFR-R317-100x100.png 100w",
+    "sizes": "(max-width: 1667px) 100vw, 1667px",
+    "thumbnail_srcset": "https://wineplus.co.th/wp-content/uploads/2025/01/WIFR-R317-300x300.png 300w, https://wineplus.co.th/wp-content/uploads/2025/01/WIFR-R317-600x600.png 600w, https://wineplus.co.th/wp-content/uploads/2025/01/WIFR-R317-1024x1024.png 1024w, https://wineplus.co.th/wp-content/uploads/2025/01/WIFR-R317-224x224.png 224w, https://wineplus.co.th/wp-content/uploads/2025/01/WIFR-R317-768x768.png 768w, https://wineplus.co.th/wp-content/uploads/2025/01/WIFR-R317-1536x1536.png 1536w, https://wineplus.co.th/wp-content/uploads/2025/01/WIFR-R317-100x100.png 100w, https://wineplus.co.th/wp-content/uploads/2025/01/WIFR-R317.png 1667w",
+    "thumbnail_sizes": "(max-width: 300px) 100vw, 300px",
+    "name": "WIFR-R317",
+    "alt": ""
+   }
+  ],
+  "categories": [
+   {
+    "id": 462,
+    "name": "France",
+    "slug": "france-reds",
+    "link": "https://wineplus.co.th/catalog/reds-wine-delivery-thailand/france-reds/"
+   },
+   {
+    "id": 444,
+    "name": "Reds",
+    "slug": "reds-wine-delivery-thailand",
+    "link": "https://wineplus.co.th/catalog/reds-wine-delivery-thailand/"
+   }
+  ],
+  "tags": [
+   {
+    "id": 558,
+    "name": "Cabernet",
+    "slug": "cabernet",
+    "link": "https://wineplus.co.th/product-tag/cabernet/"
+   },
+   {
+    "id": 551,
+    "name": "Syrah",
+    "slug": "syrah",
+    "link": "https://wineplus.co.th/product-tag/syrah/"
+   }
+  ],
+  "brands": [],
+  "attributes": [
+   {
+    "id": 0,
+    "name": "Bottle size",
+    "taxonomy": null,
+    "has_variations": false,
+    "terms": [
+     {
+      "id": 0,
+      "name": "75cl",
+      "slug": "75cl"
+     },
+     {
+      "id": 0,
+      "name": "150cl",
+      "slug": "150cl"
+     }
+    ]
+   }
+  ],
+  "variations": [],
+  "grouped_products": [],
+  "has_options": false,
+  "is_purchasable": true,
+  "is_in_stock": true,
+  "is_on_backorder": false,
+  "low_stock_remaining": null,
+  "stock_availability": {
+   "text": "",
+   "class": "in-stock"
+  },
+  "sold_individually": false,
+  "weight": "59701054",
+  "dimensions": {
+   "length": "",
+   "width": "",
+   "height": ""
+  },
+  "formatted_weight": "59701054 kg",
+  "formatted_dimensions": "N/A",
+  "add_to_cart": {
+   "text": "Add to list",
+   "description": "Add to cart: &ldquo;PRETENCIOUS COQ Cabernet Sauvignon Pays d’ Oc IGP&rdquo;",
+   "url": "/wp-json/wc/store/v1/products?per_page=4&#038;page=1&#038;add-to-cart=58327",
+   "single_text": "Add to list",
+   "minimum": 1,
+   "maximum": 9999,
+   "multiple_of": 1
+  },
+  "is_password_protected": false,
+  "extensions": {
+   "woocommerce_google_analytics_integration": {
+    "identifier": "58327"
+   }
+  },
+  "_links": {
+   "self": [
+    {
+     "href": "https://wineplus.co.th/wp-json/wc/store/v1/products/58327",
+     "targetHints": {
+      "allow": [
+       "GET"
+      ]
+     }
+    }
+   ],
+   "collection": [
+    {
+     "href": "https://wineplus.co.th/wp-json/wc/store/v1/products"
+    }
+   ],
+   "related": [
+    {
+     "embeddable": true,
+     "href": "https://wineplus.co.th/wp-json/wc/store/v1/products?related=58327&per_page=10"
+    }
+   ]
+  }
+ }
+]

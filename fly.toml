@@ -1,0 +1,38 @@
+# Fly.io config for the Thai Wine Value Finder.
+# `fly launch --no-deploy` will set/confirm `app` and create the volume;
+# then `fly deploy`. See DEPLOY.md.
+app = "thai-wine-value"
+primary_region = "sin"  # Singapore — closest Fly region to Thailand
+
+[build]
+
+[env]
+  WINEVALUE_CELLAR_DB = "/data/cellar.db"
+
+[http_service]
+  internal_port = 8501
+  force_https = true
+  auto_stop_machines = "stop"
+  auto_start_machines = true
+  min_machines_running = 0   # scale to zero when idle (cheap; ~few-sec cold start)
+
+  [http_service.concurrency]
+    type = "connections"      # Streamlit uses a persistent websocket
+    hard_limit = 50
+    soft_limit = 40
+
+  [[http_service.checks]]
+    interval = "30s"
+    timeout = "5s"
+    grace_period = "40s"
+    method = "GET"
+    path = "/_stcore/health"
+
+# persistent disk for the cellar (purchases + ratings)
+[mounts]
+  source = "winecellar_data"
+  destination = "/data"
+
+[[vm]]
+  size = "shared-cpu-1x"
+  memory = "512mb"

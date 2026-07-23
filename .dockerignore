@@ -1,0 +1,18 @@
+# keep data/wine.db (the baked catalog) — exclude everything else heavy
+.git/
+.github/
+.venv/
+node_modules/
+.wrangler/
+__pycache__/
+*/__pycache__/
+*.pyc
+.pytest_cache/
+tests/
+_design_kit/
+*.zip
+.DS_Store
+data/cache/
+data/cellar.db
+data/vivino_cache.json
+.streamlit/secrets.toml

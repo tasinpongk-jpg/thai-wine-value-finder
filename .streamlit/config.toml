@@ -1,0 +1,18 @@
+[theme]
+base = "dark"
+primaryColor = "#B23047"
+backgroundColor = "#14100E"
+secondaryBackgroundColor = "#1E1714"
+textColor = "#F2EAE0"
+font = "sans serif"
+
+[server]
+headless = true
+address = "0.0.0.0"
+port = 8501
+# behind Cloudflare's proxy these avoid websocket/origin issues
+enableCORS = false
+enableXsrfProtection = false
+
+[browser]
+gatherUsageStats = false
