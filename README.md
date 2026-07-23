@@ -7,7 +7,7 @@ Built for personal research. It uses each shop's own public data API (no fragile
 HTML scraping), is polite (rate-limited, cached, identifies itself), and degrades
 gracefully — if one shop is down, the rest still work.
 
-Public app: deployment URL is added here after the first Cloudflare release.
+Public app: https://thai-wine-value-finder-public.tasinpong-k.workers.dev
 
 | Shop | Wines | Source |
 |------|------:|--------|
@@ -107,21 +107,27 @@ SPEC.md            full design + the verified scraping recipes
 
 ## Cloudflare deployment
 
-The public deployment runs Streamlit inside one Cloudflare Container behind a
-Worker. Cloudflare Containers requires the Workers Paid plan. The container uses
-the basic instance type, scales to zero after 10 minutes, and can have a cold start.
+The public release is a read-only static catalog on Cloudflare Workers Static
+Assets, compatible with the Workers Free plan. `build_static.py` exports the
+checked-in SQLite snapshot to browser-ready JSON. Search, filters, ranking,
+tasting cards, cross-shop comparisons, insights, and CSV export run in the browser.
 
-The public site is read-only: My Cellar is disabled so anonymous visitors cannot
-share or overwrite one SQLite purchase history. Local runs retain the private
-cellar feature. `data/cellar.db`, caches, secrets, design sources, and local build
-artifacts are excluded from Git and the container image.
+My Cellar stays in the local Streamlit deployment so anonymous visitors cannot
+share or overwrite one SQLite purchase history. `data/cellar.db`, caches, secrets,
+design sources, and local build artifacts are excluded from Git and the image.
 
 ```bash
 npm install
-npm run typecheck
-docker build --platform linux/amd64 -t thai-wine-value-finder .
+npm run build:static
 npm run deploy
 ```
 
-`npm run deploy` builds and pushes the image, deploys the Worker, and prints the
-public `workers.dev` URL. Run `npx wrangler containers list` to check provisioning.
+`npm run deploy` rebuilds the public JSON snapshot, uploads the static assets,
+and prints the public `workers.dev` URL.
+
+The full Streamlit app still runs locally or on any container host:
+
+```bash
+npm run docker:build
+docker run --rm -p 8501:8501 thai-wine-value-finder
+```

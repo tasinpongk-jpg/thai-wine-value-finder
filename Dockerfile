@@ -12,8 +12,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-# Local deployments can mount /data for the private cellar. The Cloudflare Worker
-# enables WINEVALUE_PUBLIC_MODE and never exposes this shared database.
+# Local container deployments can mount /data for the private cellar. The public
+# Cloudflare release is generated separately as a read-only static catalog.
 ENV WINEVALUE_CELLAR_DB=/data/cellar.db
 EXPOSE 8501
 

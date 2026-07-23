@@ -4,6 +4,12 @@
 .venv/
 node_modules/
 .wrangler/
+public/
+src/
+package.json
+package-lock.json
+wrangler.jsonc
+build_static.py
 __pycache__/
 */__pycache__/
 *.pyc

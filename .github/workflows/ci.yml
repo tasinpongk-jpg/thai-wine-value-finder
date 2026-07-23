@@ -24,5 +24,6 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - run: npm run typecheck
+      - run: npm run build:static
+      - run: test -s public/data/wines.json
       - run: docker build --platform linux/amd64 -t thai-wine-value-finder:ci .

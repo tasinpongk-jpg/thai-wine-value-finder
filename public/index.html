@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Compare Thai wine prices and value scores across five online shops">
+  <meta name="referrer" content="no-referrer">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' https: data:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; script-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'none'">
+  <title>Thai Wine Value Finder</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&family=Spectral:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+  <script defer src="/app.js"></script>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="mast">
+      <div class="seal" aria-hidden="true"></div>
+      <div>
+        <h1>Thai Wine <em>Value</em> Finder</h1>
+        <p>Find the best bottle for your baht — public catalog</p>
+      </div>
+      <div class="catalog-meta" id="catalogMeta">Loading catalog…</div>
+    </header>
+
+    <section class="filter-panel" aria-label="Catalog filters">
+      <div class="filter-heading">Filters & sorting</div>
+      <div class="filter-grid">
+        <label>
+          <span>Price range — THB</span>
+          <div class="price-inputs">
+            <input id="minPrice" type="number" inputmode="numeric" min="0" step="100" value="0" aria-label="Minimum price">
+            <span>to</span>
+            <input id="maxPrice" type="number" inputmode="numeric" min="0" step="100" value="5000" aria-label="Maximum price">
+          </div>
+        </label>
+        <label>
+          <span>Search</span>
+          <input id="searchInput" type="search" placeholder="Malbec, Penfolds, Italy…" autocomplete="off">
+        </label>
+        <label>
+          <span>Rank by</span>
+          <select id="sortSelect">
+            <option value="value_score">Value</option>
+            <option value="quality">Quality</option>
+            <option value="price_efficiency">Price efficiency</option>
+            <option value="cross_site_gap">Cross-shop discount</option>
+            <option value="price_thb">Price — low to high</option>
+          </select>
+        </label>
+      </div>
+      <div class="chip-section">
+        <span class="section-label">Type</span>
+        <div class="chips" id="typeChips"></div>
+      </div>
+      <div class="chip-section">
+        <span class="section-label">Shop</span>
+        <div class="chips" id="shopChips"></div>
+      </div>
+      <div class="filter-bottom">
+        <label>
+          <span>Minimum rating</span>
+          <select id="ratingSelect">
+            <option value="0">Any</option>
+            <option value="3.5">3.5 and above</option>
+            <option value="4">4.0 and above</option>
+            <option value="4.5">4.5 and above</option>
+          </select>
+        </label>
+        <div>
+          <span class="section-label">Only show</span>
+          <div class="checks">
+            <label><input id="hasRating" type="checkbox"> Has rating</label>
+            <label><input id="hasTasting" type="checkbox"> Tasting notes</label>
+            <label><input id="crossShop" type="checkbox"> Cross-shop only</label>
+          </div>
+        </div>
+        <button class="secondary" id="resetButton" type="button">Reset filters</button>
+      </div>
+    </section>
+
+    <section class="metrics" aria-label="Filtered catalog summary">
+      <div><span>Bottles shown</span><strong id="metricBottles">—</strong></div>
+      <div><span>Distinct wines</span><strong id="metricDistinct">—</strong></div>
+      <div><span>With a rating</span><strong id="metricRated">—</strong></div>
+      <div><span>Median price</span><strong id="metricMedian">—</strong></div>
+    </section>
+
+    <nav class="tabs" aria-label="Catalog views">
+      <button type="button" class="active" data-tab="top">Top Picks</button>
+      <button type="button" data-tab="browse">Browse & taste</button>
+      <button type="button" data-tab="insights">Insights</button>
+    </nav>
+
+    <main>
+      <section id="topPanel" class="tab-panel">
+        <p class="panel-note" id="topNote"></p>
+        <div class="card-grid" id="topCards"></div>
+      </section>
+
+      <section id="browsePanel" class="tab-panel hidden">
+        <div class="browse-tools">
+          <p id="browseNote"></p>
+          <div class="pagination">
+            <button type="button" class="secondary" id="prevPage">Previous</button>
+            <span id="pageLabel"></span>
+            <button type="button" class="secondary" id="nextPage">Next</button>
+          </div>
+        </div>
+        <div class="browse-list" id="browseList"></div>
+      </section>
+
+      <section id="insightsPanel" class="tab-panel hidden">
+        <div class="insight-grid">
+          <article class="insight-card">
+            <h2>Price vs rating</h2>
+            <p>Better value clusters toward the upper-left — stronger rating at a lower price</p>
+            <div id="scatterChart"></div>
+          </article>
+          <article class="insight-card">
+            <h2>Average value by shop</h2>
+            <div id="shopBars" class="bar-chart"></div>
+            <h2 class="second-title">Bottles by type</h2>
+            <div id="typeBars" class="bar-chart"></div>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <span>Read-only snapshot — prices can change at the shop</span>
+      <button type="button" class="secondary" id="csvButton">Export filtered CSV</button>
+    </footer>
+  </div>
+
+  <dialog id="detailDialog">
+    <button class="dialog-close" id="dialogClose" type="button" aria-label="Close">×</button>
+    <div id="dialogBody"></div>
+  </dialog>
+
+  <div class="loading" id="loadingState" role="status">Loading 2,278 bottles…</div>
+  <div class="error-state hidden" id="errorState" role="alert"></div>
+</body>
+</html>

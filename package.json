@@ -3,16 +3,12 @@
 	"version": "1.0.0",
 	"private": true,
 	"scripts": {
-		"deploy": "wrangler deploy",
-		"dev": "wrangler dev",
-		"typecheck": "tsc --noEmit"
-	},
-	"dependencies": {
-		"@cloudflare/containers": "0.3.7"
+		"build:static": "python3 build_static.py",
+		"deploy": "npm run build:static && wrangler deploy",
+		"dev": "npm run build:static && wrangler dev",
+		"docker:build": "docker build --platform linux/amd64 -t thai-wine-value-finder ."
 	},
 	"devDependencies": {
-		"@cloudflare/workers-types": "^5.20260722.1",
-		"typescript": "^5.9.3",
 		"wrangler": "^4.113.0"
 	}
 }
