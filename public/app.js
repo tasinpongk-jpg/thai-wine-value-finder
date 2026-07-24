@@ -352,9 +352,12 @@ async function init() {
     state.wines = payload.wines || [];
     initDerivedData();
     setupControls();
-    const latest = payload.latest_scrape ? new Date(payload.latest_scrape) : null;
+    const latest = payload.latest_scrape_day ? new Date(`${payload.latest_scrape_day}T00:00:00`) : null;
     const dateLabel = latest && !Number.isNaN(latest.valueOf()) ? latest.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" }) : "unknown";
-    $("#catalogMeta").textContent = `${fmtNumber.format(state.wines.length)} bottles · ${payload.sources || 0} shops · updated ${dateLabel}`;
+    const sources = payload.sources || 0;
+    const freshSources = payload.fresh_sources ?? sources;
+    const coverage = freshSources < sources ? ` · ${freshSources}/${sources} shops current` : ` · ${sources} shops`;
+    $("#catalogMeta").textContent = `${fmtNumber.format(state.wines.length)} bottles${coverage} · updated ${dateLabel}`;
     $("#loadingState").classList.add("hidden");
     applyFilters();
   } catch (error) {

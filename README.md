@@ -74,9 +74,10 @@ so they rank a bit lower (and are easy to filter out).
 
 ```bash
 python scrape.py --no-cache              # ignore the 1-day cache, fetch fresh
+python daily_refresh.py                   # safe live refresh with last-good fallbacks
 python scrape.py --sites wishbeer        # only some shops
 python scrape.py --vivino 200            # also try up to 200 Vivino lookups
-python -m pytest -q                      # run the test suite (64 tests)
+python -m pytest -q                      # run the test suite (85 tests)
 ```
 
 ## Project layout
@@ -96,8 +97,10 @@ SPEC.md            full design + the verified scraping recipes
 
 ## Notes & caveats
 
-- **Refresh is manual** — run `scrape.py` when you want new data. Prices are kept
-  in a history table, so you can later chart how a wine's price moved.
+- **Refresh is automatic** — GitHub Actions runs at 06:30 Asia/Bangkok every day
+  and publishes a rolling `catalog` branch for Cloudflare. A failed or suspiciously
+  small shop response keeps that shop's last-good snapshot. Run
+  `python daily_refresh.py` for the same guarded refresh locally.
 - **Flaky DNS?** If a shop won't resolve on your network, you can pin its IP:
   `WINEVALUE_PIN_HOSTS="www.wishbeer.com=23.227.38.74" python scrape.py`.
   Not needed on a normal connection.
@@ -124,6 +127,12 @@ npm run deploy
 
 `npm run deploy` rebuilds the public JSON snapshot, uploads the static assets,
 and prints the public `workers.dev` URL.
+
+Cloudflare Workers Builds is connected to the `catalog` branch. The scheduled
+workflow refreshes the SQLite snapshot, runs the test suite, rebuilds the public
+JSON, and force-updates that rolling branch. Keeping only the latest generated
+catalog commit avoids adding several megabytes of historical snapshots to the
+public repository every day.
 
 The full Streamlit app still runs locally or on any container host:
 

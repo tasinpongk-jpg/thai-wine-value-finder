@@ -5,7 +5,7 @@ import json
 import os
 import sqlite3
 from dataclasses import fields
-from datetime import datetime
+from datetime import datetime, timezone
 
 from models import Wine
 
@@ -69,7 +69,7 @@ def save(wines, db_path=DEFAULT_DB):
     conn = connect(db_path)
     try:
         init_db(conn)
-        now = datetime.now().isoformat(timespec="seconds")
+        now = datetime.now(timezone.utc).isoformat(timespec="seconds")
         placeholders = ", ".join("?" for _ in COLUMNS)
         col_list = ", ".join(f'"{c}"' for c in COLUMNS)
         updates = ", ".join(f'"{c}"=excluded."{c}"'
