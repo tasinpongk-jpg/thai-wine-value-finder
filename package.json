@@ -9,6 +9,6 @@
 		"docker:build": "docker build --platform linux/amd64 -t thai-wine-value-finder ."
 	},
 	"devDependencies": {
-		"wrangler": "^4.113.0"
+		"wrangler": "^4.114.0"
 	}
 }
