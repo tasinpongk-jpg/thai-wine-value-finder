@@ -10,92 +10,125 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&family=Spectral:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/styles.css">
-  <script defer src="/app.js"></script>
+  <link rel="stylesheet" href="/styles.css?v=20260725-ux1">
+  <script defer src="/app.js?v=20260725-ux1"></script>
 </head>
 <body>
   <div class="app-shell">
     <header class="mast">
-      <div class="seal" aria-hidden="true"></div>
-      <div>
-        <h1>Thai Wine <em>Value</em> Finder</h1>
-        <p>Find the best bottle for your baht — public catalog</p>
+      <div class="brand">
+        <div class="seal" aria-hidden="true"></div>
+        <div>
+          <h1>Thai Wine <em>Value</em> Finder</h1>
+          <p>Compare prices. Find better bottles. Buy with confidence.</p>
+        </div>
       </div>
       <div class="catalog-meta" id="catalogMeta">Loading catalog…</div>
     </header>
 
-    <section class="filter-panel" aria-label="Catalog filters">
-      <div class="filter-heading">Filters & sorting</div>
-      <div class="filter-grid">
-        <label>
-          <span>Price range — THB</span>
-          <div class="price-inputs">
-            <input id="minPrice" type="number" inputmode="numeric" min="0" step="100" value="0" aria-label="Minimum price">
-            <span>to</span>
-            <input id="maxPrice" type="number" inputmode="numeric" min="0" step="100" value="5000" aria-label="Maximum price">
-          </div>
-        </label>
-        <label>
-          <span>Search</span>
-          <input id="searchInput" type="search" placeholder="Malbec, Penfolds, Italy…" autocomplete="off">
-        </label>
-        <label>
-          <span>Rank by</span>
-          <select id="sortSelect">
-            <option value="value_score">Value</option>
-            <option value="quality">Quality</option>
-            <option value="price_efficiency">Price efficiency</option>
-            <option value="cross_site_gap">Cross-shop discount</option>
-            <option value="price_thb">Price — low to high</option>
-          </select>
-        </label>
+    <section class="finder" aria-labelledby="finderTitle">
+      <div class="finder-copy">
+        <span class="finder-kicker">5 Thai wine shops, one search</span>
+        <h2 id="finderTitle">What would you like to drink?</h2>
+        <p>Search a wine, grape, country, region, producer, or shop.</p>
       </div>
-      <div class="chip-section">
-        <span class="section-label">Type</span>
-        <div class="chips" id="typeChips"></div>
+      <div class="search-wrap">
+        <span class="search-icon" aria-hidden="true"></span>
+        <input id="searchInput" type="search" placeholder="Try Malbec, Champagne, Italy…" autocomplete="off" aria-label="Search wine catalog">
+        <button id="clearSearch" type="button" aria-label="Clear search">×</button>
       </div>
-      <div class="chip-section">
-        <span class="section-label">Shop</span>
-        <div class="chips" id="shopChips"></div>
-      </div>
-      <div class="filter-bottom">
-        <label>
-          <span>Minimum rating</span>
-          <select id="ratingSelect">
-            <option value="0">Any</option>
-            <option value="3.5">3.5 and above</option>
-            <option value="4">4.0 and above</option>
-            <option value="4.5">4.5 and above</option>
-          </select>
-        </label>
-        <div>
-          <span class="section-label">Only show</span>
-          <div class="checks">
-            <label><input id="hasRating" type="checkbox"> Has rating</label>
-            <label><input id="hasTasting" type="checkbox"> Tasting notes</label>
-            <label><input id="crossShop" type="checkbox"> Cross-shop only</label>
-          </div>
+      <div class="quick-row" aria-label="Quick filters">
+        <span>Quick picks</span>
+        <div class="quick-actions">
+          <button type="button" class="quick-action" data-preset="under1000">Best under ฿1,000</button>
+          <button type="button" class="quick-action" data-preset="rated">Highly rated</button>
+          <button type="button" class="quick-action" data-preset="deals">Cross-shop deals</button>
+          <button type="button" class="quick-action" data-preset="white">White under ฿1,500</button>
         </div>
-        <button class="secondary" id="resetButton" type="button">Reset filters</button>
       </div>
     </section>
 
+    <details class="filter-panel" id="filtersPanel">
+      <summary class="filter-heading">
+        <span>Advanced filters</span>
+        <span class="filter-count" id="activeFilterCount">No extra filters</span>
+      </summary>
+      <div class="filter-content" aria-label="Catalog filters">
+        <div class="filter-grid">
+          <label>
+            <span>Price range — THB</span>
+            <div class="price-inputs">
+              <input id="minPrice" type="number" inputmode="numeric" min="0" step="100" value="0" aria-label="Minimum price">
+              <span>to</span>
+              <input id="maxPrice" type="number" inputmode="numeric" min="0" step="100" value="5000" aria-label="Maximum price">
+            </div>
+          </label>
+          <label>
+            <span>Rank results by</span>
+            <select id="sortSelect">
+              <option value="value_score">Best value</option>
+              <option value="quality">Highest quality</option>
+              <option value="price_efficiency">Quality per baht</option>
+              <option value="cross_site_gap">Biggest cross-shop saving</option>
+              <option value="price_thb">Lowest price</option>
+            </select>
+          </label>
+          <label>
+            <span>Minimum Vivino rating</span>
+            <select id="ratingSelect">
+              <option value="0">Any rating</option>
+              <option value="3.5">3.5 and above</option>
+              <option value="4">4.0 and above</option>
+              <option value="4.5">4.5 and above</option>
+            </select>
+          </label>
+        </div>
+        <div class="filter-groups">
+          <div class="chip-section">
+            <span class="section-label">Wine type</span>
+            <div class="chips" id="typeChips"></div>
+          </div>
+          <div class="chip-section">
+            <span class="section-label">Shop</span>
+            <div class="chips" id="shopChips"></div>
+          </div>
+        </div>
+        <div class="filter-bottom">
+          <div>
+            <span class="section-label">Only show</span>
+            <div class="checks">
+              <label><input id="hasRating" type="checkbox"> Has rating</label>
+              <label><input id="hasTasting" type="checkbox"> Tasting notes</label>
+              <label><input id="crossShop" type="checkbox"> Listed at multiple shops</label>
+            </div>
+          </div>
+          <button class="secondary reset-button" id="resetButton" type="button">Clear all filters</button>
+        </div>
+      </div>
+    </details>
+
     <section class="metrics" aria-label="Filtered catalog summary">
-      <div><span>Bottles shown</span><strong id="metricBottles">—</strong></div>
+      <div><span>Matching bottles</span><strong id="metricBottles">—</strong></div>
       <div><span>Distinct wines</span><strong id="metricDistinct">—</strong></div>
-      <div><span>With a rating</span><strong id="metricRated">—</strong></div>
+      <div><span>Rated bottles</span><strong id="metricRated">—</strong></div>
       <div><span>Median price</span><strong id="metricMedian">—</strong></div>
     </section>
 
     <nav class="tabs" aria-label="Catalog views">
-      <button type="button" class="active" data-tab="top">Top Picks</button>
-      <button type="button" data-tab="browse">Browse & taste</button>
-      <button type="button" data-tab="insights">Insights</button>
+      <button type="button" class="active" data-tab="top">Recommended</button>
+      <button type="button" data-tab="browse">All results</button>
+      <button type="button" data-tab="insights">Market insights</button>
     </nav>
 
     <main>
       <section id="topPanel" class="tab-panel">
-        <p class="panel-note" id="topNote"></p>
+        <div class="panel-heading">
+          <div>
+            <span class="section-label">Selected for you</span>
+            <h2>Best matches</h2>
+          </div>
+          <p class="panel-note" id="topNote"></p>
+        </div>
         <div class="card-grid" id="topCards"></div>
       </section>
 
@@ -107,6 +140,9 @@
             <span id="pageLabel"></span>
             <button type="button" class="secondary" id="nextPage">Next</button>
           </div>
+        </div>
+        <div class="browse-header" aria-hidden="true">
+          <span>Wine</span><span>Type</span><span>Price</span><span>Value</span><span></span>
         </div>
         <div class="browse-list" id="browseList"></div>
       </section>
@@ -139,7 +175,10 @@
     <div id="dialogBody"></div>
   </dialog>
 
-  <div class="loading" id="loadingState" role="status">Loading 2,278 bottles…</div>
+  <div class="loading" id="loadingState" role="status">
+    <span class="loading-mark" aria-hidden="true"></span>
+    <span>Loading today’s wine catalog…</span>
+  </div>
   <div class="error-state hidden" id="errorState" role="alert"></div>
 </body>
 </html>

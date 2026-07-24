@@ -93,6 +93,14 @@ function setupControls() {
     clearTimeout(searchTimer);
     searchTimer = setTimeout(applyFilters, 120);
   });
+  $("#clearSearch").addEventListener("click", () => {
+    $("#searchInput").value = "";
+    $("#searchInput").focus();
+    applyFilters();
+  });
+  $$(".quick-action").forEach((button) => {
+    button.addEventListener("click", () => applyPreset(button.dataset.preset));
+  });
   $("#resetButton").addEventListener("click", resetFilters);
   $("#prevPage").addEventListener("click", () => { state.page -= 1; renderBrowse(); scrollPanelTop(); });
   $("#nextPage").addEventListener("click", () => { state.page += 1; renderBrowse(); scrollPanelTop(); });
@@ -131,6 +139,72 @@ function resetFilters() {
   applyFilters();
 }
 
+function applyPreset(preset) {
+  $("#minPrice").value = 0;
+  $("#maxPrice").value = 5000;
+  $("#sortSelect").value = "value_score";
+  $("#ratingSelect").value = "0";
+  $("#hasRating").checked = false;
+  $("#hasTasting").checked = false;
+  $("#crossShop").checked = false;
+  state.selectedTypes.clear();
+  state.selectedShops.clear();
+  $$(".chip[aria-pressed]").forEach((button) => button.setAttribute("aria-pressed", "false"));
+
+  if (preset === "under1000") {
+    $("#maxPrice").value = 1000;
+  } else if (preset === "rated") {
+    $("#ratingSelect").value = "4";
+    $("#hasRating").checked = true;
+    $("#sortSelect").value = "quality";
+  } else if (preset === "deals") {
+    $("#crossShop").checked = true;
+    $("#sortSelect").value = "cross_site_gap";
+  } else if (preset === "white") {
+    $("#maxPrice").value = 1500;
+    state.selectedTypes.add("White");
+    const whiteChip = document.querySelector('[data-chip-kind="type"][data-chip-value="White"]');
+    if (whiteChip) whiteChip.setAttribute("aria-pressed", "true");
+  }
+  applyFilters();
+}
+
+function updateFilterUi() {
+  const minPrice = Number($("#minPrice").value) || 0;
+  const maxPrice = Number($("#maxPrice").value) || Number.MAX_SAFE_INTEGER;
+  const count = [
+    minPrice > 0,
+    maxPrice !== 5000,
+    $("#sortSelect").value !== "value_score",
+    Number($("#ratingSelect").value) > 0,
+    $("#hasRating").checked,
+    $("#hasTasting").checked,
+    $("#crossShop").checked,
+  ].filter(Boolean).length + state.selectedTypes.size + state.selectedShops.size;
+  $("#activeFilterCount").textContent = count ? `${count} active` : "No extra filters";
+  $("#clearSearch").classList.toggle("visible", Boolean($("#searchInput").value.trim()));
+
+  const preset = minPrice === 0 && maxPrice === 1000
+    && $("#sortSelect").value === "value_score"
+    && Number($("#ratingSelect").value) === 0
+    && !$("#crossShop").checked && !state.selectedTypes.size ? "under1000"
+    : minPrice === 0 && maxPrice === 5000
+      && $("#sortSelect").value === "quality"
+      && Number($("#ratingSelect").value) === 4
+      && $("#hasRating").checked ? "rated"
+      : minPrice === 0 && maxPrice === 5000
+        && $("#sortSelect").value === "cross_site_gap"
+        && $("#crossShop").checked ? "deals"
+        : minPrice === 0 && maxPrice === 1500
+          && $("#sortSelect").value === "value_score"
+          && state.selectedTypes.size === 1
+          && state.selectedTypes.has("White") ? "white"
+          : "";
+  $$(".quick-action").forEach((button) => {
+    button.setAttribute("aria-pressed", button.dataset.preset === preset ? "true" : "false");
+  });
+}
+
 function applyFilters() {
   const minPrice = Number($("#minPrice").value) || 0;
   const maxPrice = Number($("#maxPrice").value) || Number.MAX_SAFE_INTEGER;
@@ -162,6 +236,7 @@ function applyFilters() {
     return sort === "price_thb" ? av - bv : bv - av;
   });
   state.page = 1;
+  updateFilterUi();
   renderAll();
 }
 
@@ -201,12 +276,12 @@ function ratingMarkup(wine) {
 }
 
 function whyText(wine) {
-  if (wine.isCheapest) return `Cheapest of ${wine.listings} listings`;
+  if (wine.isCheapest) return `Best price across ${wine.listings} shops`;
   const quality = value(wine, "quality");
   const efficiency = value(wine, "price_efficiency");
-  if (quality != null && quality >= .8) return "High quality score";
+  if (quality != null && quality >= .8) return "Rated highly";
   if (efficiency != null && efficiency >= .7) return "Strong quality per baht";
-  return "Catalog pick";
+  return "Good catalog value";
 }
 
 function cardMarkup(wine) {
@@ -216,23 +291,31 @@ function cardMarkup(wine) {
   const discount = (value(wine, "cross_site_gap") || 0) * 20;
   const meta = [wine.wine_type, wine.country, wine.vintage].filter((item) => item != null && item !== "").join(" · ");
   const url = safeUrl(wine.url);
+  const discountPct = Math.round((value(wine, "cross_site_gap") || 0) * 100);
+  const reason = discountPct > 0 && wine.isCheapest ? `Save ${discountPct}% vs matched median` : whyText(wine);
   return `<article class="wine-card">
-    <div class="card-head">${imageMarkup(wine)}<div><div class="eyebrow">${esc(meta)}</div><div class="wine-name">${esc(wine.name)}</div></div></div>
+    <div class="card-topline">
+      <span class="shop-pill">${esc(wine.site)}</span>
+      <span class="value-pill"><strong>${score.toFixed(0)}</strong> value</span>
+    </div>
+    <div class="card-head">${imageMarkup(wine)}<div class="card-copy">
+      <div class="eyebrow">${esc(meta)}</div>
+      <div class="wine-name">${esc(wine.name)}</div>
+      <div class="why">${esc(reason)}</div>
+    </div></div>
     <div class="price-rating"><span class="price"><small>฿</small>${fmtPrice(wine.price_thb)}</span>${ratingMarkup(wine)}</div>
-    <div class="value-row"><strong>${score.toFixed(0)}</strong><span>VALUE</span></div>
-    <div class="value-track"><i style="width:${quality}%;background:#c8a24c"></i><i style="width:${efficiency}%;background:#b23047"></i><i style="width:${discount}%;background:#7fa0b4"></i></div>
-    <div class="why">${esc(whyText(wine))}</div>
-    <div class="card-actions"><button type="button" class="secondary" data-detail="${esc(wineId(wine))}">Tasting card</button>${url ? `<a class="link-button" href="${esc(url)}" target="_blank" rel="noopener noreferrer">View shop</a>` : ""}</div>
+    <div class="value-track" title="Quality, price efficiency, and cross-shop saving"><i style="width:${quality}%;background:#d4ad55"></i><i style="width:${efficiency}%;background:#c33b58"></i><i style="width:${discount}%;background:#7fa0b4"></i></div>
+    <div class="card-actions"><button type="button" class="secondary" data-detail="${esc(wineId(wine))}">View details</button>${url ? `<a class="link-button" href="${esc(url)}" target="_blank" rel="noopener noreferrer">Go to shop</a>` : ""}</div>
   </article>`;
 }
 
 function renderTop() {
-  $("#topNote").textContent = state.filtered.length ? `Best ${Math.min(12, state.filtered.length)} by ${sortLabels[$("#sortSelect").value]}.` : "";
+  $("#topNote").textContent = state.filtered.length ? `${Math.min(12, state.filtered.length)} of ${fmtNumber.format(state.filtered.length)} results · ranked by ${sortLabels[$("#sortSelect").value]}` : "";
   $("#topCards").innerHTML = state.filtered.length ? state.filtered.slice(0, 12).map(cardMarkup).join("") : '<div class="empty">No bottles match these filters.</div>';
 }
 
 function browseRowMarkup(wine) {
-  const meta = [wine.country, wine.region, wine.vintage].filter((item) => item != null && item !== "").join(" · ");
+  const meta = [wine.site, wine.country, wine.region, wine.vintage].filter((item) => item != null && item !== "").join(" · ");
   return `<div class="browse-row">
     <div><div class="browse-name">${esc(wine.name)}</div><div class="browse-meta">${esc(meta)}</div></div>
     <div class="browse-type"><span class="type-dot" style="background:${colors[wine.wine_type] || colors.Other}"></span>${esc(wine.wine_type)}</div>
