@@ -128,9 +128,10 @@ npm run deploy
 `npm run deploy` rebuilds the public JSON snapshot, uploads the static assets,
 and prints the public `workers.dev` URL.
 
-Cloudflare Workers Builds is connected to the `catalog` branch. The scheduled
-workflow refreshes the SQLite snapshot, runs the test suite, rebuilds the public
-JSON, and force-updates that rolling branch. Keeping only the latest generated
+The scheduled workflow refreshes the SQLite snapshot, runs the test suite,
+rebuilds the public JSON, and force-updates the rolling `catalog` branch. The
+Cloudflare app reads that public catalog directly and falls back to its deployed
+snapshot if GitHub is temporarily unavailable. Keeping only the latest generated
 catalog commit avoids adding several megabytes of historical snapshots to the
 public repository every day.
 

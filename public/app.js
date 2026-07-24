@@ -10,6 +10,10 @@ const state = {
   tab: "top",
 };
 
+const CATALOG_URLS = [
+  "https://raw.githubusercontent.com/tasinpongk-jpg/thai-wine-value-finder/catalog/public/data/wines.json",
+  "/data/wines.json",
+];
 const $ = (selector) => document.querySelector(selector);
 const $$ = (selector) => [...document.querySelectorAll(selector)];
 const fmtNumber = new Intl.NumberFormat("en-US", { maximumFractionDigits: 0 });
@@ -346,9 +350,19 @@ function exportCsv() {
 
 async function init() {
   try {
-    const response = await fetch("/data/wines.json", { cache: "no-cache" });
-    if (!response.ok) throw new Error(`Catalog request failed with ${response.status}`);
-    const payload = await response.json();
+    let payload;
+    let lastError;
+    for (const url of CATALOG_URLS) {
+      try {
+        const response = await fetch(url, { cache: "no-cache" });
+        if (!response.ok) throw new Error(`Catalog request failed with ${response.status}`);
+        payload = await response.json();
+        break;
+      } catch (error) {
+        lastError = error;
+      }
+    }
+    if (!payload) throw lastError || new Error("No catalog source available");
     state.wines = payload.wines || [];
     initDerivedData();
     setupControls();
