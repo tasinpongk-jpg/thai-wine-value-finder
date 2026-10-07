@@ -223,7 +223,9 @@ def refresh_catalog(
     source_timeout=120,
     scrapers=SCRAPERS,
 ):
-    existing_rows = store.read_wines(db_path)
+    all_rows = store.read_wines(db_path)
+    retired = {row["source"] for row in all_rows} - set(scrapers)
+    existing_rows = [row for row in all_rows if row["source"] not in retired]
     fresh, failures = collect_sources(
         use_cache=use_cache,
         timeout=timeout,
@@ -239,9 +241,11 @@ def refresh_catalog(
     print(f"Recomputing matches and value scores for {len(wines):,} listings...")
     assign_match_groups(wines)
     compute_scores(wines)
-    _stage_catalog(wines, set(accepted), db_path)
+    _stage_catalog(wines, set(accepted) | retired, db_path)
 
     print(f"Updated {len(accepted)}/{len(scrapers)} shops -> {db_path}")
+    for key in sorted(retired):
+        print(f"Dropped retired source {key}")
     for key in sorted(failures):
         print(f"Retained last-good {key}: {failures[key]}")
     return {

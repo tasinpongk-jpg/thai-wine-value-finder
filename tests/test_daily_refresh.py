@@ -62,3 +62,24 @@ def test_stage_catalog_replaces_only_updated_sources(tmp_path):
         ("fresh", "new"),
         ("failed", "keep"),
     }
+
+
+def test_refresh_catalog_purges_retired_source(tmp_path):
+    db = str(tmp_path / "wine.db")
+    daily_refresh.store.save(
+        [
+            Wine(source="active", source_id="old", name="Old", price_thb=100),
+            Wine(source="retired", source_id="gone", name="Gone", price_thb=200),
+        ],
+        db,
+    )
+
+    class FakeScraper:
+        @staticmethod
+        def scrape(session):
+            return [Wine(source="active", source_id="new", name="New", price_thb=120)]
+
+    daily_refresh.refresh_catalog(db, scrapers={"active": FakeScraper})
+    rows = daily_refresh.store.read_wines(db)
+
+    assert {(item["source"], item["source_id"]) for item in rows} == {("active", "new")}

@@ -30,8 +30,7 @@ CLARET, BRASS, SLATE = "#B23047", "#C8A24C", "#7FA0B4"
 TYPE_DOT = {"Red": CLARET, "White": "#D8C27A", "Rosé": "#E0828F", "Sparkling": BRASS,
             "Champagne": BRASS, "Dessert": "#C98A3A", "Fortified": "#8A4B3A",
             "Orange": "#C97A33", "Other": MUTED2}
-SITE_COLORS = {"Spirit House": CLARET, "Wine Store Asia": SLATE, "Wine Plus": BRASS,
-               "Wishbeer": "#9C6B74", "Wine Duty Free": "#8A7C70"}
+SITE_COLORS = {"Spirit House": CLARET, "Wine Store Asia": SLATE, "Wishbeer": "#9C6B74", "Wine Duty Free": "#8A7C70"}
 NOTE_COLORS = {"appearance": BRASS, "nose": CLARET, "palate": SLATE, "pairing": MUTED}
 PAGE_SIZE = 15
 PUBLIC_MODE = os.environ.get("WINEVALUE_PUBLIC_MODE", "").lower() in {

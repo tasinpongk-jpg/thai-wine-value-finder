@@ -1,5 +1,5 @@
 """Shared helpers for the three WooCommerce Store-API sites
-(winedutyfree, wineplus, spirithouse)."""
+(winedutyfree, spirithouse)."""
 from __future__ import annotations
 
 from enrich import normalize as N

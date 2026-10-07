@@ -42,7 +42,7 @@ const colors = {
   Champagne: "#c8a24c", Dessert: "#c98a3a", Fortified: "#8a4b3a", Orange: "#c97a33", Other: "#75685e",
 };
 const shopColors = {
-  "Spirit House": "#b23047", "Wine Store Asia": "#7fa0b4", "Wine Plus": "#c8a24c",
+  "Spirit House": "#b23047", "Wine Store Asia": "#7fa0b4",
   Wishbeer: "#9c6b74", "Wine Duty Free": "#8a7c70",
 };
 const sortLabels = {

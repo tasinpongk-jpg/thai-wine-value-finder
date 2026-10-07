@@ -4,7 +4,7 @@ import json
 import os
 
 from models import WINE_TYPES
-from scrapers import winedutyfree, wineplus, spirithouse, wishbeer
+from scrapers import winedutyfree, spirithouse, wishbeer
 from scrapers import winestoreasia as wsa
 
 FX = os.path.join(os.path.dirname(__file__), "fixtures")
@@ -32,15 +32,6 @@ def test_winedutyfree_parses():
     assert wines[0].wine_type == "Red"
     assert wines[0].country == "Italy"
 
-
-def test_wineplus_parses_and_filters_nonwine():
-    raw = load("wineplus")
-    wines = [wineplus.parse(o) for o in raw if wineplus._is_wine(o)]
-    _sane(wines, "wineplus")
-    first = wines[0]
-    assert first.wine_type == "White"
-    assert first.country == "New Zealand"
-    assert first.size_ml == 750
 
 
 def test_spirithouse_uses_site_vivino_rating():

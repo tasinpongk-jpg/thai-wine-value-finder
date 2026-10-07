@@ -31,15 +31,6 @@ SOURCES = {
         # only keep items that have a wine_type attribute set
         "wine_only_attr": "wine_type",
     },
-    "wineplus": {
-        "label": "Wine Plus",
-        "platform": "woocommerce",
-        "base": "https://wineplus.co.th",
-        "products_path": "/wp-json/wc/store/v1/products",
-        "params": {"per_page": 100},
-        "category": None,
-        # X-WP-Total header is unreliable here -> paginate until short page
-    },
     "spirithouse": {
         "label": "Spirit House",
         "platform": "woocommerce",

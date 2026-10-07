@@ -47,7 +47,7 @@ Every bottle has these fields (not all are present for every bottle — coverage
 | Field | Notes / coverage |
 |---|---|
 | name | always |
-| shop (source) | always — Spirit House, Wine Store Asia, Wine Plus, Wishbeer, Wine Duty Free |
+| shop (source) | always — Spirit House, Wine Store Asia, Wishbeer, Wine Duty Free |
 | price (THB) | always |
 | wine type | Red / White / Rosé / Sparkling / Champagne / Dessert / Fortified / Orange |
 | vintage, bottle size | often |
@@ -183,7 +183,7 @@ Use these so mockups are realistic. Prices in THB.
   cross-shop discount in the value score.
 
 **D — Sparse bottle (graceful degradation example)**
-- A Wine Plus or Wine Duty Free red that has a short description but **no Vivino rating
+- A Wine Duty Free red that has a short description but **no Vivino rating
   and no tasting notes** — design how this looks so it still feels intentional (e.g.
   "No tasting notes published for this bottle." in a quiet style), not broken.
 

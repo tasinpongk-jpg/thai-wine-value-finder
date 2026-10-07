@@ -14,8 +14,7 @@ import sys
 import time
 
 from scrapers.base import PoliteSession
-from scrapers import (winedutyfree, wineplus, spirithouse, wishbeer,
-                      winestoreasia)
+from scrapers import winedutyfree, spirithouse, wishbeer, winestoreasia
 from enrich import vivino
 from enrich.match import assign_match_groups
 from enrich.value import compute_scores
@@ -25,7 +24,6 @@ SCRAPERS = {
     "winedutyfree": winedutyfree,
     "wishbeer": wishbeer,
     "winestoreasia": winestoreasia,
-    "wineplus": wineplus,
     "spirithouse": spirithouse,
 }
 
