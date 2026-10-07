@@ -1,6 +1,6 @@
 # 🍷 Thai Wine Value Finder
 
-Scrapes **5 Thai online wine shops**, rates every bottle, computes a **0–100 value
+Scrapes **4 Thai online wine shops**, rates every bottle, computes a **0–100 value
 score**, and shows it all in a dashboard so you can find the best bottles to buy.
 
 Built for personal research. It uses each shop's own public data API (no fragile
@@ -13,7 +13,6 @@ Public app: https://thai-wine-value-finder-public.tasinpong-k.workers.dev
 |------|------:|--------|
 | Spirit House | ~850 | WooCommerce API (+ built-in Vivino ratings) |
 | Wine Store Asia | ~590 | Magento API |
-| Wine Plus | ~400 | WooCommerce API |
 | Wishbeer | ~290 | Shopify API |
 | Wine Duty Free | ~150 | WooCommerce API |
 

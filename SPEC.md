@@ -22,7 +22,7 @@ They are deliberately separate so viewing is always fast.
 
 ## The 5 sites & their VERIFIED data sources
 
-All five expose a clean structured JSON API — **no HTML parsing required**. Recipes below
+All four expose a clean structured JSON API — **no HTML parsing required**. Recipes below
 were each tested live (2026-06-24).
 
 | # | Site | Platform | Endpoint (paginate until short/empty) |
@@ -30,21 +30,19 @@ were each tested live (2026-06-24).
 | 1 | winedutyfree.com | WooCommerce | `GET /wp-json/wc/store/v1/products?per_page=100&page=N` |
 | 2 | Wishbeer | Shopify | `GET https://www.wishbeer.com/collections/wine/products.json?limit=250&page=N` |
 | 3 | Wine Store Asia | Magento 2 | `GET https://www.winestoreasia.com/rest/V1/products?searchCriteria[pageSize]=250&searchCriteria[currentPage]=N` |
-| 4 | Wine Plus | WooCommerce | `GET https://wineplus.co.th/wp-json/wc/store/v1/products?per_page=100&page=N` |
-| 5 | Spirit House | WooCommerce | `GET https://spirithouse.com/wp-json/wc/store/v1/products?category=50&per_page=100&page=N` |
+| 4 | Spirit House | WooCommerce | `GET https://spirithouse.com/wp-json/wc/store/v1/products?category=50&per_page=100&page=N` |
 
-Approx total catalog: **~2,000 wines** (WDF ~150, Wishbeer 286, WineStoreAsia ~589, WinePlus ~400, SpiritHouse ~850).
+Approx total catalog: **~2,000 wines** (WDF ~150, Wishbeer 286, WineStoreAsia ~589, SpiritHouse ~850).
 
 ### Per-site field notes
 
-**WooCommerce (winedutyfree, wineplus, spirithouse)** — each product object:
+**WooCommerce (winedutyfree, spirithouse)** — each product object:
 - `name`, `permalink`, `sku`
 - price: `prices.price` is an **integer in satang** → divide by `10 ** prices.currency_minor_unit` (usually /100). Also `regular_price`, `sale_price`, `on_sale`.
 - `categories[].name` — split into wine type vs country (heuristic).
 - `attributes[]` — list of `{name/taxonomy, terms[].name}`. Spirit House uses `pa_wine-type`, `pa_vintage`, `pa_volume`, `pa_country`, `pa_region`, `pa_varietals`, **`pa_vivino-rating`** (present on ~100% of its wines), `pa_style`.
 - `average_rating`, `review_count` (WooCommerce store reviews — usually 0).
 - `short_description`, `description` (HTML; strip tags). Critic scores, when present, live here.
-- WinePlus: `X-WP-Total` header is unreliable → paginate until a short page.
 
 **Shopify (Wishbeer)** — each product in `products[]`:
 - `title`, `variants[0].price` (string baht, e.g. `"1159.00"`).
@@ -106,7 +104,7 @@ wine-value/
 ├─ scrapers/
 │   ├─ base.py          # polite HTTP session (UA, retry, rate-limit, disk cache)
 │   ├─ winedutyfree.py  ├─ wishbeer.py     ├─ winestoreasia.py
-│   ├─ wineplus.py      └─ spirithouse.py  # each: scrape() -> list[Wine]
+│   ├─ spirithouse.py  # each: scrape() -> list[Wine]
 ├─ enrich/
 │   ├─ normalize.py     # price/size/type/vintage canonicalization
 │   ├─ critic_scores.py # extract critic scores from text
@@ -136,3 +134,5 @@ Canonical `wine_type` ∈ {Red, White, Rosé, Sparkling, Champagne, Dessert, For
 - These public APIs may be locked down at any time; scrapers degrade gracefully (a failing site
   is logged and skipped, the rest still produce a dashboard).
 - Personal-use research only.
+
+> Wine Plus (wineplus.co.th) was dropped in Oct 2026: its API returns 403 to GitHub Actions runners.
