@@ -42,4 +42,4 @@ def parse(obj):
 def scrape(session=None):
     session = session or PoliteSession()
     objs = wc.fetch_all(session, CFG["base"], CFG["products_path"], CFG["params"])
-    return [parse(o) for o in objs]
+    return [parse(o) for o in objs if wc.in_stock(o)]
