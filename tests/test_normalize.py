@@ -128,3 +128,17 @@ def test_parse_size_thousands_separator():
 def test_resolve_size_magnum_without_number():
     assert N.resolve_size_ml("Marques de Riscal Reserva Rioja Magnum", "750 ml") == 1500
     assert N.resolve_size_ml("Double Magnum 3L", "750 ml") == 3000
+
+
+def test_safe_http_url_accepts_only_absolute_http_links():
+    from enrich.normalize import safe_http_url
+    ok = ["https://shop.example/wine?id=1", "http://shop.example/a b", "HTTPS://Shop.example/"]
+    for url in ok:
+        assert safe_http_url(url) == url
+    assert safe_http_url("  https://x.example/w  ") == "https://x.example/w"
+    bad = [None, "", "   ", "javascript:alert(1)", "JavaScript:alert(1)", " javascript:x",
+           "data:text/html,<script>", "vbscript:x", "file:///etc/passwd", "ftp://x.example",
+           "/relative/path", "//evil.example/x", "https://", "http:///nohost",
+           "https://x.example/\njavascript:alert(1)", "java\tscript:alert(1)", float("nan")]
+    for url in bad:
+        assert safe_http_url(url) is None, url

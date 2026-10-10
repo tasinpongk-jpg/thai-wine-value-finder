@@ -19,6 +19,7 @@ import access
 import store
 from sources import SOURCES
 from enrich.cellar import drink_window
+from enrich.normalize import safe_http_url
 
 st.set_page_config(page_title="Thai Wine Value Finder", page_icon="🍷",
                    layout="wide", initial_sidebar_state="collapsed")
@@ -253,13 +254,14 @@ def value_ledger(score, q, pe, disc):
 def proxied(url, w=240):
     """Route shop images through the free wsrv.nl proxy — bypasses hot-link blocks
     (so images load when the site is served from a different domain) and resizes."""
+    url = safe_http_url(url)
     if not url:
         return ""
-    return "https://wsrv.nl/?url=" + quote(str(url), safe="") + f"&w={w}&output=webp&q=82"
+    return "https://wsrv.nl/?url=" + quote(url, safe="") + f"&w={w}&output=webp&q=82"
 
 
 def img_html(row, cls="cardimg"):
-    if has(row.get("image")):
+    if safe_http_url(row.get("image")):
         return (f'<img class="{cls}" src="{esc(proxied(row["image"], 160))}" '
                 f'referrerpolicy="no-referrer" loading="lazy" '
                 f'onerror="this.style.visibility=\'hidden\'">')
@@ -312,7 +314,8 @@ def why(row):
 
 def card_visual(row):
     nm = esc(row["name"])
-    link = f'<a href="{esc(row["url"])}" target="_blank">{nm}</a>' if has(row.get("url")) else nm
+    url = safe_http_url(row.get("url"))
+    link = f'<a href="{esc(url)}" target="_blank" rel="noopener noreferrer">{nm}</a>' if url else nm
     eb = " · ".join(filter(None, [esc(row.get("wine_type")), esc(row.get("country")),
                     str(int(row["vintage"])) if pd.notna(row.get("vintage")) else ""]))
     return (
@@ -338,7 +341,7 @@ def detail_html(row, full_df):
     prod_html = f'<div class="prod">{prod}</div>' if prod else ""
     blurb = f'<div class="blurb">{esc(row["description"])}</div>' if has(row.get("description")) else ""
     img = (f'<img class="dimg" src="{esc(proxied(row["image"], 420))}" referrerpolicy="no-referrer" '
-           f'onerror="this.style.display=\'none\'">') if has(row.get("image")) else ""
+           f'onerror="this.style.display=\'none\'">') if safe_http_url(row.get("image")) else ""
 
     q, pe, disc = qeff(row) or 0, row.get("price_efficiency") or 0, row.get("cross_site_gap") or 0
     qlabel = "Quality" if has(row.get("quality")) else "Quality (est.)"
@@ -372,8 +375,9 @@ def detail_html(row, full_df):
             rows = ""
             for _, p in peers.iterrows():
                 cls = " best" if p["price_thb"] == best else ""
-                shop = (f'<a href="{esc(p["url"])}" target="_blank" style="color:#E6DBCE;text-decoration:none">{esc(p["site"])}</a>'
-                        if has(p.get("url")) else esc(p["site"]))
+                purl = safe_http_url(p.get("url"))
+                shop = (f'<a href="{esc(purl)}" target="_blank" rel="noopener noreferrer" style="color:#E6DBCE;text-decoration:none">{esc(p["site"])}</a>'
+                        if purl else esc(p["site"]))
                 tag = '<span class="tagcheap">Cheapest</span>' if p["price_thb"] == best else ""
                 vint = f'<span style="color:#6F6358;font:400 11.5px Inter;margin-right:12px">{int(p["vintage"])}</span>' if pd.notna(p.get("vintage")) else ""
                 pc = BRASS if p["price_thb"] == best else CHALK
@@ -401,8 +405,8 @@ def detail_html(row, full_df):
 def tasting_dialog(wine, full_df, db):
     st.markdown(CSS, unsafe_allow_html=True)
     st.markdown(detail_html(wine, full_df), unsafe_allow_html=True)
-    if has(wine.get("url")):
-        st.link_button(f"View at {wine['site']} ↗", wine["url"])
+    if safe_http_url(wine.get("url")):
+        st.link_button(f"View at {wine['site']} ↗", safe_http_url(wine.get("url")))
 
     if CELLAR_MODE == access.HIDDEN:
         st.caption("Cellar tracking is available in local deployments only.")
@@ -568,8 +572,8 @@ with tabs[0]:
                     bcols = st.columns(2)
                     if bcols[0].button("🍷 Tasting card", key=f"tc{i+j}", width="stretch"):
                         tasting_dialog(row.to_dict(), df, CELLAR_DB)
-                    if has(row.get("url")):
-                        bcols[1].link_button("View ↗", row["url"], width="stretch")
+                    if safe_http_url(row.get("url")):
+                        bcols[1].link_button("View ↗", safe_http_url(row.get("url")), width="stretch")
 
 # ---- Browse ----
 with tabs[1]:
