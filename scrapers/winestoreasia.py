@@ -1,6 +1,20 @@
 """Wine Store Asia — Magento 2 REST API. Wine attributes are dropdown IDs that
-must be resolved to labels via /rest/V1/products/attributes/{code}."""
+must be resolved to labels via /rest/V1/products/attributes/{code}.
+
+Pricing notes (verified live 2026-10-10):
+- Every store view ("th", "default", "sgd") has THB as its base currency and the
+  REST ``price`` is identical across views, so the store code alone doesn't fix
+  anything. The bad prices come from ~100 Singapore SKUs (url keys ending in
+  ``-sg``) whose ``price`` holds SGD amounts (e.g. 38 for a ฿900 wine). They live
+  only in the disabled "All Wine" category tree, so we drop products that are in
+  any inactive category, or that aren't in an active one, or are disabled.
+- ``special_price`` (with optional ``special_from_date``/``special_to_date``) is
+  the shop's sale price and is applied when active and lower than ``price``.
+"""
 from __future__ import annotations
+
+from datetime import date, datetime
+from zoneinfo import ZoneInfo
 
 from sources import SOURCES
 from scrapers.base import PoliteSession, strip_html
@@ -34,6 +48,76 @@ def fetch_attr_maps(session):
     return maps
 
 
+BANGKOK = ZoneInfo("Asia/Bangkok")
+
+
+def fetch_category_flags(session):
+    """Return (active_ids, inactive_ids) as string sets from the category tree.
+
+    A category counts as inactive when it, or any ancestor, has is_active=false.
+    On failure both sets are empty and category filtering is skipped (the
+    price sanity check in daily_refresh still applies).
+    """
+    try:
+        tree = session.get_json(CFG["base"] + CFG["categories_path"])
+    except Exception as e:  # noqa: BLE001 - degrade, but say so
+        print(f"  winestoreasia: category tree unavailable ({type(e).__name__}); "
+              "not filtering by category")
+        return set(), set()
+    return category_flags(tree)
+
+
+def category_flags(tree):
+    active, inactive = set(), set()
+
+    def walk(node, parent_active):
+        if not isinstance(node, dict):
+            return
+        is_active = bool(node.get("is_active", True)) and parent_active
+        if node.get("id") is not None:
+            (active if is_active else inactive).add(str(node["id"]))
+        for child in node.get("children_data") or []:
+            walk(child, is_active)
+
+    walk(tree, True)
+    return active, inactive
+
+
+def is_listed(item, active=None, inactive=None):
+    """Enabled product that's sold through the (active) Thai catalog."""
+    if item.get("status") not in (None, 1, "1"):
+        return False
+    if not active and not inactive:
+        return True
+    cats = {str(c) for c in (_ca(item).get("category_ids") or [])}
+    return bool(cats & active) and not (cats & inactive)
+
+
+def _parse_dt(value):
+    if not value:
+        return None
+    try:
+        return datetime.fromisoformat(str(value).strip().replace(" ", "T")).date()
+    except ValueError:
+        return None
+
+
+def effective_price(item, today=None):
+    """Regular price, or the active special_price when it's lower."""
+    price = _to_float(item.get("price"))
+    ca = _ca(item)
+    special = _to_float(ca.get("special_price"))
+    if special is None or special <= 0 or (price is not None and special >= price):
+        return price
+    today = today or datetime.now(BANGKOK).date()
+    start, end = _parse_dt(ca.get("special_from_date")), _parse_dt(ca.get("special_to_date"))
+    if start and today < start:
+        return price
+    if end and today > end:
+        return price
+    return special
+
+
 def _ca(item):
     return {a.get("attribute_code"): a.get("value")
             for a in (item.get("custom_attributes") or [])}
@@ -49,7 +133,7 @@ def is_wine(item):
     return _ca(item).get("wine_type") not in (None, "")
 
 
-def parse(item, maps):
+def parse(item, maps, today: date | None = None):
     ca = _ca(item)
     name = N.clean_text(item.get("name"))
     img = ca.get("image") or ca.get("small_image")
@@ -63,11 +147,11 @@ def parse(item, maps):
         source=KEY,
         source_id=str(item.get("sku") or item.get("id") or name),
         name=name,
-        price_thb=_to_float(item.get("price")),
+        price_thb=effective_price(item, today),
         wine_type=N.canonical_wine_type([wtype] if wtype else [], text=name),
         vintage=N.parse_vintage(ca.get("vintage")) or N.parse_vintage(name),
-        size_ml=N.parse_size_ml(
-            _label(maps, "wine_bottle_size", ca.get("wine_bottle_size")) or name),
+        size_ml=N.resolve_size_ml(
+            name, _label(maps, "wine_bottle_size", ca.get("wine_bottle_size"))),
         country=(_label(maps, "country", ca.get("country"))
                  or _ISO.get(ca.get("country_of_manufacture"))),
         region=_label(maps, "wine_province_area", ca.get("wine_province_area")),
@@ -88,6 +172,7 @@ def parse(item, maps):
 def scrape(session=None):
     session = session or PoliteSession()
     maps = fetch_attr_maps(session)
+    active, inactive = fetch_category_flags(session)
     page_size = CFG["params"]["searchCriteria[pageSize]"]
     items, page = [], 1
     while page <= 30:
@@ -101,4 +186,6 @@ def scrape(session=None):
         if page * page_size >= (data.get("total_count") or 0):
             break
         page += 1
-    return [parse(it, maps) for it in items if is_wine(it)]
+    today = datetime.now(BANGKOK).date()
+    return [parse(it, maps, today) for it in items
+            if is_wine(it) and is_listed(it, active, inactive)]

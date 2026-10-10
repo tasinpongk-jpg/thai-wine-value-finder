@@ -77,9 +77,46 @@ def test_refresh_catalog_purges_retired_source(tmp_path):
     class FakeScraper:
         @staticmethod
         def scrape(session):
-            return [Wine(source="active", source_id="new", name="New", price_thb=120)]
+            return [Wine(source="active", source_id="new", name="New", price_thb=520)]
 
     daily_refresh.refresh_catalog(db, scrapers={"active": FakeScraper})
     rows = daily_refresh.store.read_wines(db)
 
     assert {(item["source"], item["source_id"]) for item in rows} == {("active", "new")}
+
+
+def test_validate_sources_drops_implausibly_cheap_listings():
+    fresh = {
+        "shop": [
+            Wine(source="shop", source_id="ok", name="Real", price_thb=900, size_ml=750),
+            # SGD amount stored as THB (Wine Store Asia Singapore range)
+            Wine(source="shop", source_id="sgd", name="Villa Sandi", price_thb=38,
+                 size_ml=750),
+            # 187 ml at ฿230 is ฿922 per 750 ml: plausible, keep
+            Wine(source="shop", source_id="mini", name="Mini", price_thb=230, size_ml=187),
+            # 200 ml at ฿35 is ฿131 per 750 ml: implausible
+            Wine(source="shop", source_id="tiny", name="Tiny", price_thb=35, size_ml=200),
+            # unknown size, ฿120: implausible
+            Wine(source="shop", source_id="nosize", name="No size", price_thb=120),
+        ],
+    }
+    failures = {}
+
+    accepted = daily_refresh.validate_sources(fresh, [], failures)
+
+    assert {w.source_id for w in accepted["shop"]} == {"ok", "mini"}
+    assert failures == {}
+
+
+def test_validate_sources_rejects_shop_when_most_prices_implausible():
+    existing = [row("shop", str(index), price=900) for index in range(4)]
+    fresh = {"shop": [
+        Wine(source="shop", source_id=str(i), name=f"w{i}", price_thb=40)
+        for i in range(4)
+    ] + [Wine(source="shop", source_id="ok", name="ok", price_thb=900)]}
+    failures = {}
+
+    accepted = daily_refresh.validate_sources(fresh, existing, failures)
+
+    assert accepted == {}
+    assert "suspicious result" in failures["shop"]

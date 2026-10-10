@@ -7,29 +7,31 @@ shop's previous snapshot, while successful shops are updated atomically.
 from __future__ import annotations
 
 import argparse
-import os
-import shutil
-import sqlite3
-import tempfile
 import time
-from collections import Counter
-from dataclasses import fields
 from multiprocessing import get_context
 
-from enrich.match import assign_match_groups
-from enrich.value import compute_scores
-from models import Wine
+from catalog import (
+    MIN_PRICE_PER_750_THB,
+    MIN_RETAIN_RATIO,
+    _as_wine,
+    merge_catalog,
+    rebuild_catalog,
+    stage_catalog,
+    validate_sources,
+)
 from scrape import SCRAPERS
 from scrapers.base import PoliteSession
 import store
 
+_stage_catalog = stage_catalog  # backwards-compatible name
 
-MIN_RETAIN_RATIO = 0.5
-WINE_FIELDS = {field.name for field in fields(Wine)}
-
-
-def _as_wine(row: dict) -> Wine:
-    return Wine(**{key: row.get(key) for key in WINE_FIELDS})
+# validate/merge/stage now live in catalog.py (shared with scrape.py); keep the
+# old names importable from here.
+__all__ = [
+    "MIN_PRICE_PER_750_THB", "MIN_RETAIN_RATIO", "_as_wine", "_stage_catalog",
+    "collect_sources", "merge_catalog", "rebuild_catalog", "refresh_catalog",
+    "stage_catalog", "validate_sources",
+]
 
 
 def _scrape_source(key, module, use_cache, timeout, retries):
@@ -139,81 +141,6 @@ def collect_sources(
     return fresh, failures
 
 
-def validate_sources(fresh, existing_rows, failures, min_retain_ratio=MIN_RETAIN_RATIO):
-    """Reject empty, malformed, or unexpectedly small source snapshots."""
-    previous_counts = Counter(row["source"] for row in existing_rows)
-    accepted = {}
-    for key, wines in fresh.items():
-        valid = [
-            wine
-            for wine in wines
-            if wine.source == key
-            and wine.source_id
-            and wine.name
-            and wine.price_thb is not None
-            and wine.price_thb > 0
-        ]
-        previous = previous_counts.get(key, 0)
-        minimum = max(1, int(previous * min_retain_ratio)) if previous else 1
-        if len(valid) < minimum:
-            failures[key] = (
-                f"suspicious result: {len(valid)} valid wines, "
-                f"minimum {minimum} from previous {previous}"
-            )
-            print(f"{key:14} fallback — {failures[key]}")
-            continue
-        accepted[key] = valid
-    return accepted
-
-
-def merge_catalog(existing_rows, accepted):
-    """Use fresh rows for accepted shops and last-good rows for every other shop."""
-    updated_sources = set(accepted)
-    merged = [
-        _as_wine(row)
-        for row in existing_rows
-        if row["source"] not in updated_sources
-    ]
-    for key in sorted(accepted):
-        merged.extend(accepted[key])
-    return merged
-
-
-def _stage_catalog(wines, updated_sources, db_path):
-    """Write a validated database copy, then atomically replace the live snapshot."""
-    db_path = os.path.abspath(db_path)
-    parent = os.path.dirname(db_path)
-    os.makedirs(parent, exist_ok=True)
-    with tempfile.TemporaryDirectory(prefix=".wine-refresh-", dir=parent) as tmp:
-        staged = os.path.join(tmp, "wine.db")
-        if os.path.exists(db_path):
-            shutil.copy2(db_path, staged)
-        conn = store.connect(staged)
-        try:
-            store.init_db(conn)
-            conn.executemany(
-                "DELETE FROM wines WHERE source=?",
-                [(source,) for source in updated_sources],
-            )
-            conn.commit()
-        finally:
-            conn.close()
-
-        store.save(wines, staged)
-        check = sqlite3.connect(staged)
-        try:
-            integrity = check.execute("PRAGMA integrity_check").fetchone()[0]
-            count = check.execute("SELECT COUNT(*) FROM wines").fetchone()[0]
-        finally:
-            check.close()
-        if integrity != "ok" or count != len(wines):
-            raise RuntimeError(
-                f"staged database validation failed: integrity={integrity}, "
-                f"rows={count}, expected={len(wines)}"
-            )
-        os.replace(staged, db_path)
-
-
 def refresh_catalog(
     db_path=store.DEFAULT_DB,
     *,
@@ -223,9 +150,6 @@ def refresh_catalog(
     source_timeout=120,
     scrapers=SCRAPERS,
 ):
-    all_rows = store.read_wines(db_path)
-    retired = {row["source"] for row in all_rows} - set(scrapers)
-    existing_rows = [row for row in all_rows if row["source"] not in retired]
     fresh, failures = collect_sources(
         use_cache=use_cache,
         timeout=timeout,
@@ -233,15 +157,9 @@ def refresh_catalog(
         source_timeout=source_timeout,
         scrapers=scrapers,
     )
-    accepted = validate_sources(fresh, existing_rows, failures)
+    wines, accepted, retired = rebuild_catalog(db_path, fresh, failures, scrapers)
     if not accepted:
         raise RuntimeError("all shop refreshes failed; catalog was not changed")
-
-    wines = merge_catalog(existing_rows, accepted)
-    print(f"Recomputing matches and value scores for {len(wines):,} listings...")
-    assign_match_groups(wines)
-    compute_scores(wines)
-    _stage_catalog(wines, set(accepted) | retired, db_path)
 
     print(f"Updated {len(accepted)}/{len(scrapers)} shops -> {db_path}")
     for key in sorted(retired):

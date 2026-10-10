@@ -8,6 +8,17 @@ from typing import List, Optional
 from enrich.critic_scores import best_critic_score
 
 WEIGHTS = (0.45, 0.35, 0.20)  # quality, price_efficiency, cross_site_gap
+STANDARD_ML = 750
+_MIN_ML, _MAX_ML = 50, 27000
+
+
+def price_per_750(price: Optional[float], size_ml: Optional[int]) -> Optional[float]:
+    """Price normalized to a standard 750 ml bottle (unchanged if size unknown)."""
+    if not price or price <= 0:
+        return None
+    if size_ml and _MIN_ML <= size_ml <= _MAX_ML:
+        return price * STANDARD_ML / size_ml
+    return price
 
 
 def quality_from_inputs(vivino_rating: Optional[float],
@@ -57,21 +68,25 @@ def compute_scores(wines, weights=WEIGHTS):
     for w in wines:
         critic_best = best_critic_score(w.critic_scores)
         w.quality = quality_from_inputs(w.vivino_rating, critic_best)
-        pe_raw.append((w.quality / w.price_thb) if (w.quality and w.price_thb) else None)
+        p750 = price_per_750(w.price_thb, w.size_ml)
+        pe_raw.append((w.quality / p750) if (w.quality and p750) else None)
 
     # normalize price efficiency on a log scale (raw quality/baht is heavily skewed)
     idx = [i for i, v in enumerate(pe_raw) if v and v > 0]
     norm = minmax([math.log(pe_raw[i]) for i in idx])
     pe_map = dict(zip(idx, norm))
 
+    # compare like with like: a half bottle isn't "50% cheaper" than a full one
     groups = {}
     for w in wines:
-        if w.match_group is not None and w.price_thb:
-            groups.setdefault(w.match_group, []).append(w.price_thb)
+        p750 = price_per_750(w.price_thb, w.size_ml)
+        if w.match_group is not None and p750:
+            groups.setdefault(w.match_group, []).append(p750)
 
     for i, w in enumerate(wines):
         w.price_efficiency = pe_map.get(i, 0.0)
         gp = groups.get(w.match_group)
-        w.cross_site_gap = cross_site_gap(w.price_thb, gp) if gp else 0.0
+        p750 = price_per_750(w.price_thb, w.size_ml)
+        w.cross_site_gap = cross_site_gap(p750, gp) if (gp and p750) else 0.0
         w.value_score = value_score(w.quality, w.price_efficiency, w.cross_site_gap, weights)
     return wines

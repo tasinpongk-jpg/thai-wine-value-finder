@@ -74,3 +74,37 @@ def test_compute_scores_sets_fields_and_ranks_value_buy_first():
     assert cheap.value_score > pricey.value_score
     # the rated cheap wine should beat the unrated one
     assert cheap.value_score > norating.value_score
+
+
+# ---- bottle-size normalization ---------------------------------------------
+def test_price_per_750():
+    assert V.price_per_750(500, 375) == 1000
+    assert V.price_per_750(3000, 1500) == 1500
+    assert V.price_per_750(900, 750) == 900
+    assert V.price_per_750(900, None) == 900      # unknown size: as listed
+    assert V.price_per_750(None, 750) is None
+    assert V.price_per_750(0, 750) is None
+
+
+def test_half_bottle_not_favored_over_same_value_full_bottle():
+    half = Wine(source="a", source_id="1", name="Half", price_thb=500,
+                size_ml=375, vivino_rating=4.0)
+    full = Wine(source="b", source_id="2", name="Full", price_thb=1000,
+                size_ml=750, vivino_rating=4.0)
+    other = Wine(source="c", source_id="3", name="Other", price_thb=3000,
+                 size_ml=750, vivino_rating=4.2)
+    V.compute_scores([half, full, other])
+    # identical price per 750 ml and quality -> identical score
+    assert half.price_efficiency == full.price_efficiency
+    assert half.value_score == full.value_score
+
+
+def test_cross_site_gap_compares_price_per_750():
+    # same wine (group 1): 375 ml at 500 is NOT cheaper than 750 ml at 900
+    half = Wine(source="a", source_id="1", name="X", price_thb=500, size_ml=375,
+                match_group=1)
+    full = Wine(source="b", source_id="2", name="X", price_thb=900, size_ml=750,
+                match_group=1)
+    V.compute_scores([half, full])
+    assert half.cross_site_gap == 0.0
+    assert full.cross_site_gap > 0.0
