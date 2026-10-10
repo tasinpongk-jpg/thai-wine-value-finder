@@ -8,11 +8,14 @@ font = "sans serif"
 
 [server]
 headless = true
-address = "0.0.0.0"
+# Local only by default; the Dockerfile passes --server.address=0.0.0.0 itself.
+address = "127.0.0.1"
 port = 8501
-# behind Cloudflare's proxy these avoid websocket/origin issues
-enableCORS = false
-enableXsrfProtection = false
+# Keep Streamlit's CSRF/XSRF and CORS protection ON. Both work through a
+# Cloudflare tunnel (same origin). Turning them off let any website you visit
+# submit cellar changes to a running dashboard.
+enableCORS = true
+enableXsrfProtection = true
 
 [browser]
 gatherUsageStats = false
