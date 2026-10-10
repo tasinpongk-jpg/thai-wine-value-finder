@@ -26,7 +26,12 @@ SOURCES = {
         "label": "Wine Store Asia",
         "platform": "magento",
         "base": "https://www.winestoreasia.com",
-        "products_path": "/rest/V1/products",
+        # "th" store view: base and display currency are both THB (verified via
+        # /rest/V1/store/storeConfigs on 2026-10-10). The catalog also contains an
+        # orphaned Singapore range priced in SGD, filtered out in the scraper.
+        "store_code": "th",
+        "products_path": "/rest/th/V1/products",
+        "categories_path": "/rest/th/V1/categories",
         "params": {"searchCriteria[pageSize]": 250},
         # only keep items that have a wine_type attribute set
         "wine_only_attr": "wine_type",
