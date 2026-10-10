@@ -176,7 +176,9 @@ def load_data(db_path, _mtime):
     df["listings"] = df.groupby("match_group")["source"].transform("count")
     df["cheapest_in_group"] = df.groupby("match_group")["price_thb"].transform("min")
     df["is_cheapest"] = df["cheapest_in_group"].eq(df["price_thb"]) & (df["listings"] > 1)
-    for c in ("quality", "price_efficiency", "cross_site_gap", "value_score",
+    if "quality_est" not in df.columns:
+        df["quality_est"] = None
+    for c in ("quality", "quality_est", "price_efficiency", "cross_site_gap", "value_score",
               "vivino_rating", "price_thb", "vintage"):
         df[c] = pd.to_numeric(df[c], errors="coerce")
     df["has_tasting"] = df[["nose", "palate", "appearance"]].apply(
@@ -280,12 +282,23 @@ def badges(row):
     return "".join(out)
 
 
+def qeff(row):
+    """Real quality, or the typical-for-type estimate used to score unrated wines."""
+    q = row.get("quality")
+    if q is not None and pd.notna(q):
+        return q
+    est = row.get("quality_est")
+    return est if est is not None and pd.notna(est) else None
+
+
 def why(row):
     if row.get("is_cheapest"):
         return f"Cheapest of {int(row['listings'])} listings"
     if (row.get("quality") or 0) >= 0.86:
         return "Top rated"
     if (row.get("price_efficiency") or 0) >= 0.8:
+        if not has(row.get("quality")):
+            return "Low price for its type (unrated)"
         return "Great quality for the price"
     if (row.get("cross_site_gap") or 0) >= 0.2:
         return "Below the cross-shop median"
@@ -304,7 +317,7 @@ def card_visual(row):
         f'<span class="priceM"><span class="cur">฿</span>{fmt_price(row["price_thb"])}</span>'
         f'{stars_html(row.get("vivino_rating"))}</div>'
         '<div style="border-top:1px solid #2A211C;margin-top:11px;padding-top:11px">'
-        f'{value_ledger(row["value_score"], row.get("quality"), row.get("price_efficiency"), row.get("cross_site_gap"))}</div>'
+        f'{value_ledger(row["value_score"], qeff(row), row.get("price_efficiency"), row.get("cross_site_gap"))}</div>'
         f'<div class="why" style="margin-top:9px">✦ {esc(why(row))}</div>')
 
 
@@ -322,9 +335,10 @@ def detail_html(row, full_df):
     img = (f'<img class="dimg" src="{esc(proxied(row["image"], 420))}" referrerpolicy="no-referrer" '
            f'onerror="this.style.display=\'none\'">') if has(row.get("image")) else ""
 
-    q, pe, disc = row.get("quality") or 0, row.get("price_efficiency") or 0, row.get("cross_site_gap") or 0
+    q, pe, disc = qeff(row) or 0, row.get("price_efficiency") or 0, row.get("cross_site_gap") or 0
+    qlabel = "Quality" if has(row.get("quality")) else "Quality (est.)"
     seal = value_seal(row.get("value_score") or 0, q, pe, disc, size=170)
-    bars = (_bar("Quality", BRASS, q*45, 45, q*100) + _bar("Price efficiency", CLARET, pe*35, 35, pe*100)
+    bars = (_bar(qlabel, BRASS, q*45, 45, q*100) + _bar("Price efficiency", CLARET, pe*35, 35, pe*100)
             + _bar("Cross-shop discount", SLATE, disc*20, 20, disc*100))
     sealcard = f'<div class="sealcard">{seal}<div class="breakdown">{bars}</div></div>'
 

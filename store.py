@@ -33,6 +33,11 @@ def init_db(conn):
     conn.execute(
         f'CREATE TABLE IF NOT EXISTS wines ({cols_sql}, '
         f'PRIMARY KEY (source, source_id))')
+    # migration: add Wine fields introduced after the table was created
+    have = {r[1] for r in conn.execute("PRAGMA table_info(wines)").fetchall()}
+    for c in COLUMNS:
+        if c not in have:
+            conn.execute(f'ALTER TABLE wines ADD COLUMN "{c}"')
     conn.execute(
         'CREATE TABLE IF NOT EXISTS price_history ('
         'id INTEGER PRIMARY KEY AUTOINCREMENT, source TEXT, source_id TEXT, '

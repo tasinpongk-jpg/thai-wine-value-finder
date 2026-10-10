@@ -1,17 +1,29 @@
-import math
-
 from enrich import value as V
 from models import Wine
 
 
-# ---- quality -----------------------------------------------------------
-def test_quality_prefers_vivino():
-    assert V.quality_from_inputs(vivino_rating=4.5, critic_best=90) == 0.9
+# ---- quality (calibrated: Vivino stars -> points -> 0-1) -----------------
+def test_vivino_to_points_calibration():
+    assert V.vivino_to_points(3.5) == 86
+    assert V.vivino_to_points(4.0) == 90
+    assert V.vivino_to_points(4.5) == 94
+    assert V.vivino_to_points(None) is None
+    assert V.vivino_to_points(0) is None
+
+
+def test_quality_same_scale_for_vivino_and_critic():
+    # Vivino 4.0 and a 90-point critic score mean the same quality
+    assert V.quality_from_inputs(4.0, None) == V.quality_from_inputs(None, 90)
+    assert V.quality_from_inputs(None, 90) == round(10 / 15, 4)
+
+
+def test_quality_blends_vivino_and_critic():
+    # 4.5 stars = 94 pts; with a 90-pt critic score -> 92 pts -> (92-80)/15 = 0.8
+    assert V.quality_from_inputs(vivino_rating=4.5, critic_best=90) == 0.8
 
 
 def test_quality_from_critic_when_no_vivino():
-    # 90 pts -> (90-80)/20 = 0.5
-    assert V.quality_from_inputs(vivino_rating=None, critic_best=90) == 0.5
+    assert V.quality_from_inputs(vivino_rating=None, critic_best=95) == 1.0
 
 
 def test_quality_critic_clamped():
@@ -51,8 +63,7 @@ def test_value_score_full():
     assert V.value_score(quality=0.9, price_efficiency=0.5, cross_site_gap=0.2) == 62.0
 
 
-def test_value_score_without_quality_ranks_lower():
-    # no quality -> only pe + gap contribute (not reweighted up)
+def test_value_score_none_quality_contributes_zero():
     assert V.value_score(quality=None, price_efficiency=1.0, cross_site_gap=0.0) == 35.0
 
 
@@ -108,3 +119,67 @@ def test_cross_site_gap_compares_price_per_750():
     V.compute_scores([half, full])
     assert half.cross_site_gap == 0.0
     assert full.cross_site_gap > 0.0
+
+
+# ---- unrated wines: typical-for-type estimate --------------------------------
+def _rated(i, stars, price, wtype="Red"):
+    return Wine(source="a", source_id=str(i), name=f"r{i}", price_thb=price,
+                vivino_rating=stars, wine_type=wtype)
+
+
+def test_unrated_gets_estimate_but_quality_stays_none():
+    wines = [_rated(i, 3.5 + 0.1 * i, 1000) for i in range(11)]
+    unrated = Wine(source="b", source_id="u", name="Unrated", price_thb=600,
+                   wine_type="Red")
+    V.compute_scores(wines + [unrated])
+    assert unrated.quality is None
+    median_q = sorted(w.quality for w in wines)[5]
+    assert unrated.quality_est == round(median_q * V.UNRATED_CONFIDENCE, 4)
+    assert all(w.quality_est is None for w in wines)
+    # it now competes: cheaper than every rated wine -> real price efficiency
+    assert unrated.price_efficiency > 0
+    assert unrated.value_score > 20
+
+
+def test_unrated_ranked_by_price_within_type():
+    wines = [_rated(i, 4.0, 1000) for i in range(3)]
+    cheap = Wine(source="b", source_id="c", name="Cheap", price_thb=400, wine_type="Red")
+    dear = Wine(source="b", source_id="d", name="Dear", price_thb=1600, wine_type="Red")
+    half = Wine(source="b", source_id="h", name="Half", price_thb=300, size_ml=375,
+                wine_type="Red")   # ฿600 per 750 ml
+    V.compute_scores(wines + [cheap, dear, half])
+    assert cheap.value_score > half.value_score > dear.value_score
+
+
+def test_rated_beats_equally_priced_unrated_of_typical_quality():
+    rated = [_rated(i, 4.0, 800) for i in range(3)]
+    unrated = Wine(source="b", source_id="u", name="U", price_thb=800, wine_type="Red")
+    V.compute_scores(rated + [unrated])
+    assert rated[0].value_score > unrated.value_score
+
+
+def test_type_prior_used_when_enough_rated_else_global():
+    reds = [_rated(i, 4.4, 1000) for i in range(V.MIN_RATED_PER_TYPE)]
+    whites = [_rated(100 + i, 3.6, 1000, "White") for i in range(2)]
+    V.compute_scores(reds + whites)
+    priors = V.unrated_priors(reds + whites)
+    assert priors["Red"] == round(reds[0].quality * V.UNRATED_CONFIDENCE, 4)
+    assert "White" not in priors          # too few -> falls back to global
+    assert None in priors
+
+
+def test_no_rated_wines_at_all_leaves_estimate_none():
+    wines = [Wine(source="a", source_id="1", name="x", price_thb=500)]
+    V.compute_scores(wines)
+    assert wines[0].quality_est is None
+    assert wines[0].value_score == 0.0
+
+
+def test_zero_quality_is_a_real_rating_not_missing():
+    # 80 critic points -> quality 0.0; must not be treated as "unrated"
+    zero = Wine(source="a", source_id="z", name="Z", price_thb=500,
+                critic_scores=[{"critic": "WS", "score": 80}])
+    other = _rated(1, 4.2, 900)
+    V.compute_scores([zero, other])
+    assert zero.quality == 0.0
+    assert zero.quality_est is None
