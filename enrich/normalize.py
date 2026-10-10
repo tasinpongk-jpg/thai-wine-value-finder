@@ -8,9 +8,19 @@ from typing import Optional
 
 from sources import WINE_TYPE_CATEGORY_HINTS
 
-_SIZE_RE = re.compile(r"(\d+(?:\.\d+)?)\s*(ml|cl|l)\b", re.IGNORECASE)
+# Latin units need a word boundary; Thai units (มล. = ml, ลิตร = litre) don't use
+# spaces between words, so they're matched without one.
+_SIZE_RE = re.compile(
+    r"(?<![\d.,])(\d{1,3}(?:,\d{3})+|\d+(?:\.\d+)?)\s*"
+    r"(?:(ml|cl|ltr|lt|litres?|liters?|l)\b|(มิลลิลิตร|มล\.?|ลิตร))",
+    re.IGNORECASE)
 _VINTAGE_RE = re.compile(r"\b(19[89]\d|20[0-2]\d)\b")
-_UNIT_TO_ML = {"ml": 1, "cl": 10, "l": 1000}
+_UNIT_TO_ML = {"ml": 1, "cl": 10, "l": 1000, "ltr": 1000, "lt": 1000,
+               "litre": 1000, "litres": 1000, "liter": 1000, "liters": 1000,
+               "มิลลิลิตร": 1, "มล": 1, "มล.": 1, "ลิตร": 1000}
+# plausible bottle sizes: 50 ml miniature .. 27 l "Primat"
+_MIN_ML, _MAX_ML = 50, 27000
+_MAGNUM_RE = re.compile(r"\bmagnum\b", re.IGNORECASE)
 
 # colour words for sites that only put the type in free text (winedutyfree = Thai)
 _TEXT_TYPE_HINTS = [
@@ -68,11 +78,26 @@ def parse_price_text(text) -> Optional[float]:
 def parse_size_ml(text) -> Optional[int]:
     if not text:
         return None
-    m = _SIZE_RE.search(str(text))
-    if not m:
-        return None
-    value = float(m.group(1)) * _UNIT_TO_ML[m.group(2).lower()]
-    return int(round(value))
+    for m in _SIZE_RE.finditer(str(text)):
+        unit = (m.group(2) or m.group(3)).lower()
+        value = int(round(float(m.group(1).replace(",", "")) * _UNIT_TO_ML[unit]))
+        if _MIN_ML <= value <= _MAX_ML:
+            return value
+    return None
+
+
+def resolve_size_ml(name, attribute=None) -> Optional[int]:
+    """Bottle size, preferring an explicit size in the product name.
+
+    Shops sometimes leave a default "750 ml" attribute on half bottles or magnums
+    whose name says "(375ml)" / "1.5L"; the name is the more specific signal.
+    """
+    size = parse_size_ml(name)
+    if size:
+        return size
+    if name and _MAGNUM_RE.search(str(name)):
+        return 1500
+    return parse_size_ml(attribute)
 
 
 def parse_vintage(text) -> Optional[int]:

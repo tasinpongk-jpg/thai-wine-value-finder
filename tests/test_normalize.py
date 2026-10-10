@@ -85,3 +85,46 @@ def test_normalize_name_lowercases_and_strips_size_vintage():
 
 def test_normalize_name_drops_punctuation():
     assert N.normalize_name("Château Haut-Brion!!") == N.normalize_name("chateau haut brion")
+
+
+# ---- bottle size: Thai units + name beats attribute ------------------------
+def test_parse_size_thai_units():
+    assert N.parse_size_ml("ไวน์แดง 750 มล.") == 750
+    assert N.parse_size_ml("ไวน์ขาว 375มล") == 375
+    assert N.parse_size_ml("1.5 ลิตร") == 1500
+    assert N.parse_size_ml("750 มิลลิลิตร") == 750
+
+
+def test_parse_size_more_latin_units():
+    assert N.parse_size_ml("Monte Antico 1.5 Ltr") == 1500
+    assert N.parse_size_ml("Magnum 1500 ml.") == 1500
+    assert N.parse_size_ml("750 ML") == 750
+
+
+def test_parse_size_ignores_implausible_numbers():
+    assert N.parse_size_ml("Pack of 0.5 ml samples") is None
+
+
+def test_thai_size_stripped_from_vintage_and_matching_key():
+    assert N.parse_vintage("ไวน์แดง 2000 มล.") is None
+    assert N.normalize_name("Penfolds Bin 2 750 มล.") == N.normalize_name("Penfolds Bin 2")
+
+
+def test_resolve_size_prefers_name_over_attribute():
+    # Spirit House lists half bottles with a default "750 ml" attribute
+    assert N.resolve_size_ml("Astoria Prosecco Extra Dry (375ml)", "750 ml") == 375
+    assert N.resolve_size_ml("Monte Antico Magnum 1.5L", "750 ml") == 1500
+    assert N.resolve_size_ml("Astoria Prosecco", "750 ml") == 750
+    assert N.resolve_size_ml("Astoria Prosecco", None) is None
+
+
+def test_parse_size_thousands_separator():
+    # "1,500ml" must not be read as 500 ml
+    assert N.parse_size_ml("Louis Perdrier Brut Rosé (1,500ml)") == 1500
+    assert N.parse_size_ml("Big bottle 3,000 ml") == 3000
+    assert N.parse_size_ml("Penfolds Bin 2, 750ml") == 750
+
+
+def test_resolve_size_magnum_without_number():
+    assert N.resolve_size_ml("Marques de Riscal Reserva Rioja Magnum", "750 ml") == 1500
+    assert N.resolve_size_ml("Double Magnum 3L", "750 ml") == 3000

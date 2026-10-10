@@ -31,7 +31,7 @@ def parse(obj):
     w.vintage = N.parse_vintage(vintage) or N.parse_vintage(w.name)
 
     vol = wc.first_attr(amap, "pa_volume", "volume")
-    w.size_ml = N.parse_size_ml(vol or w.name)
+    w.size_ml = N.resolve_size_ml(w.name, vol)  # "(375ml)" in name beats a 750 attr
 
     w.country = wc.first_attr(amap, "pa_country", "country")
     w.region = wc.first_attr(amap, "pa_region", "region")

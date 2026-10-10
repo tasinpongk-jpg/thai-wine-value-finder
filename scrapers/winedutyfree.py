@@ -20,13 +20,22 @@ _THAI_COUNTRY = {
 def parse(obj):
     w = wc.common_wine(obj, KEY)
     blob = wc.text_blob(obj)
-    w.wine_type = N.canonical_wine_type(wc.categories(obj), text=blob)
+    amap = wc.attr_map(obj)
+    # pa_* attributes (on most products) are "RED WINE", "750 ML", "France"...;
+    # Thai labels like "750 มล." are handled by the size parser too.
+    wtype = wc.first_attr(amap, "pa_wine-type", "ประเภทไวน์")
+    w.wine_type = N.canonical_wine_type(
+        ([wtype] if wtype else []) + wc.categories(obj), text=blob)
     w.vintage = N.parse_vintage(w.name)
-    w.size_ml = N.parse_size_ml(w.name)
-    for th, en in _THAI_COUNTRY.items():
-        if th in blob:
-            w.country = en
-            break
+    w.size_ml = N.resolve_size_ml(
+        w.name, wc.first_attr(amap, "pa_bottle-size", "ขนาดบรรจุ"))
+    w.alcohol = wc.first_attr(amap, "pa_alcohol", "แอลกอฮอล์")
+    w.country = wc.first_attr(amap, "pa_country", "ประเทศที่ผลิต")
+    if not w.country:
+        for th, en in _THAI_COUNTRY.items():
+            if th in blob:
+                w.country = en
+                break
     return w
 
 
