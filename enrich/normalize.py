@@ -4,6 +4,7 @@ from __future__ import annotations
 import html
 import re
 import unicodedata
+from urllib.parse import urlsplit
 from typing import Optional
 
 from sources import WINE_TYPE_CATEGORY_HINTS
@@ -50,6 +51,26 @@ def short_desc(text, limit: int = 320) -> Optional[str]:
         return s
     cut = s[:limit].rsplit(" ", 1)[0]
     return cut.rstrip(" .,;:-") + "…"
+
+
+def safe_http_url(url) -> Optional[str]:
+    """Return ``url`` only if it's an absolute http(s) URL with a host.
+
+    Scraped links are rendered as ``<a href>`` / link buttons; anything else
+    (``javascript:``, ``data:``, relative paths, junk) is dropped.
+    """
+    if url is None:
+        return None
+    s = str(url).strip()
+    if not s or any(ch in s for ch in "\r\n\t\x00"):
+        return None
+    try:
+        parts = urlsplit(s)
+    except ValueError:
+        return None
+    if parts.scheme.lower() not in ("http", "https") or not parts.netloc:
+        return None
+    return s
 
 
 def parse_wc_price(price_str, minor_unit: int) -> Optional[float]:

@@ -42,6 +42,10 @@ def init_db(conn):
         'CREATE TABLE IF NOT EXISTS price_history ('
         'id INTEGER PRIMARY KEY AUTOINCREMENT, source TEXT, source_id TEXT, '
         'price_thb REAL, observed_at TEXT)')
+    # _last_price() runs once per wine on every save; without this it's a full scan
+    conn.execute(
+        'CREATE INDEX IF NOT EXISTS idx_price_history_item '
+        'ON price_history (source, source_id, id)')
     conn.execute(
         'CREATE TABLE IF NOT EXISTS purchases ('
         'id INTEGER PRIMARY KEY AUTOINCREMENT, source TEXT, source_id TEXT, name TEXT, '
