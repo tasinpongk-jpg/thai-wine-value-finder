@@ -172,3 +172,100 @@ def test_spirithouse_name_size_beats_volume_attribute():
     obj = _wc_obj("Astoria Butterfly Prosecco Extra Dry (375ml)",
                   [("Volume", "pa_volume", "750 ml")])
     assert spirithouse.parse(obj).size_ml == 375
+
+
+# ---- stock / variants / attribute maps / page caps ---------------------------
+import pytest  # noqa: E402
+
+from scrapers import woocommerce as wc  # noqa: E402
+
+
+def test_woocommerce_out_of_stock_filtered():
+    objs = [dict(_wc_obj("In", []), is_in_stock=True),
+            dict(_wc_obj("Out", []), id=2, is_in_stock=False),
+            dict(_wc_obj("Unknown", []), id=3)]
+    assert [wc.in_stock(o) for o in objs] == [True, False, True]
+
+
+def test_wishbeer_picks_available_750_variant():
+    variants = [
+        {"title": "375ml", "price": "600.00", "available": True},
+        {"title": "750ml", "price": "1,100.00", "available": False},
+        {"title": "75cl", "price": "1,150.00", "available": True},
+        {"title": "1.5L", "price": "2,300.00", "available": True},
+    ]
+    assert wishbeer.pick_variant(variants)["price"] == "1,150.00"
+
+
+def test_wishbeer_falls_back_to_any_available_then_first():
+    v = [{"title": "375ml", "price": "1", "available": False},
+         {"title": "1.5L", "price": "2", "available": True}]
+    assert wishbeer.pick_variant(v)["price"] == "2"
+    v = [{"title": "A", "price": "1", "available": False},
+         {"title": "B", "price": "2", "available": False}]
+    assert wishbeer.pick_variant(v)["price"] == "1"
+    assert wishbeer.pick_variant([]) == {}
+
+
+def test_wishbeer_default_title_uses_product_title_size():
+    v = [{"title": "Default Title", "price": "900.00", "available": True}]
+    assert wishbeer.pick_variant(v, "Some Wine 750ml")["price"] == "900.00"
+
+
+def test_wishbeer_parse_uses_chosen_variant_price_and_size():
+    obj = {"id": 1, "title": "Test Wine", "tags": [], "variants": [
+        {"title": "375ml", "price": "600.00", "available": True},
+        {"title": "750ml", "price": "1,100.00", "available": True}]}
+    w = wishbeer.parse(obj)
+    assert w.price_thb == 1100.0
+    assert w.size_ml == 750
+
+
+def test_wishbeer_unavailable_products_skipped():
+    assert wishbeer.is_available({"variants": [{"available": True}]})
+    assert not wishbeer.is_available({"variants": [{"available": False}]})
+    assert wishbeer.is_available({"variants": []})
+
+
+class _Session:
+    def __init__(self, fail_on=None, pages=None):
+        self.fail_on, self.pages, self.calls = fail_on, pages or {}, []
+
+    def get_json(self, url, params=None):
+        self.calls.append(url)
+        if self.fail_on and self.fail_on in url:
+            raise RuntimeError("HTTP 503")
+        return self.pages.get(url, {"options": [{"value": "17", "label": "Red Wine"}]})
+
+
+def test_winestoreasia_attr_map_failure_fails_the_shop(capsys):
+    with pytest.raises(wsa.AttributeMapError):
+        wsa.fetch_attr_maps(_Session(fail_on="wine_body"))
+    assert "wine_body" in capsys.readouterr().out
+
+
+def test_winestoreasia_empty_wine_type_map_fails():
+    s = _Session()
+    s.pages[wsa.CFG["base"] + "/rest/V1/products/attributes/wine_type"] = {"options": []}
+    with pytest.raises(wsa.AttributeMapError):
+        wsa.fetch_attr_maps(s)
+
+
+def test_woocommerce_page_cap_warns(capsys):
+    class Full:
+        def get_json(self, url, params=None):
+            return [{"id": i} for i in range(params["per_page"])]
+    out = wc.fetch_all(Full(), "https://shop", "/p", {"per_page": 2}, max_pages=3)
+    assert len(out) == 6
+    assert "safety cap" in capsys.readouterr().out
+
+
+def test_wishbeer_page_cap_warns(capsys, monkeypatch):
+    class Full:
+        def get_json(self, url, params=None):
+            return {"products": [{"id": i, "title": f"w{i}", "variants": [
+                {"price": "900", "available": True}]} for i in range(params["limit"])]}
+    monkeypatch.setitem(wishbeer.CFG["params"], "limit", 2)
+    out = wishbeer.scrape(Full())
+    assert len(out) == 40
+    assert "safety cap" in capsys.readouterr().out

@@ -17,7 +17,7 @@ from datetime import date, datetime
 from zoneinfo import ZoneInfo
 
 from sources import SOURCES
-from scrapers.base import PoliteSession, strip_html
+from scrapers.base import PoliteSession, strip_html, warn_page_cap
 from scrapers.woocommerce import _to_float
 from enrich import normalize as N
 from enrich.critic_scores import extract_critic_scores
@@ -35,16 +35,26 @@ _ISO = {"AR": "Argentina", "AU": "Australia", "CL": "Chile", "FR": "France",
         "DE": "Germany", "PT": "Portugal", "ZA": "South Africa"}
 
 
+class AttributeMapError(RuntimeError):
+    """An attribute label map couldn't be loaded; parsing would silently lose
+    type/size/country, so the whole shop fails (and keeps its last-good data)."""
+
+
 def fetch_attr_maps(session):
     maps = {}
     for code in ATTR_CODES:
         try:
             data = session.get_json(CFG["base"] + f"/rest/V1/products/attributes/{code}")
             opts = data.get("options") or []
-            maps[code] = {str(o.get("value")): o.get("label")
-                          for o in opts if o.get("value") not in (None, "")}
-        except Exception:
-            maps[code] = {}
+        except Exception as e:
+            print(f"  winestoreasia: attribute map '{code}' failed: {type(e).__name__}: {e}")
+            raise AttributeMapError(f"attribute map '{code}' unavailable: {e}") from e
+        maps[code] = {str(o.get("value")): o.get("label")
+                      for o in opts if o.get("value") not in (None, "")}
+        if not maps[code]:
+            print(f"  winestoreasia: WARNING attribute map '{code}' has no options")
+    if not maps.get("wine_type"):
+        raise AttributeMapError("attribute map 'wine_type' is empty")
     return maps
 
 
@@ -174,8 +184,11 @@ def scrape(session=None):
     maps = fetch_attr_maps(session)
     active, inactive = fetch_category_flags(session)
     page_size = CFG["params"]["searchCriteria[pageSize]"]
-    items, page = [], 1
-    while page <= 30:
+    items, page, max_pages = [], 1, 30
+    while True:
+        if page > max_pages:
+            warn_page_cap(KEY, max_pages)
+            break
         params = dict(CFG["params"])
         params["searchCriteria[currentPage]"] = page
         data = session.get_json(CFG["base"] + CFG["products_path"], params)
