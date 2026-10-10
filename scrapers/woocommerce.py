@@ -1,10 +1,10 @@
-"""Shared helpers for the three WooCommerce Store-API sites
+"""Shared helpers for the WooCommerce Store-API sites
 (winedutyfree, spirithouse)."""
 from __future__ import annotations
 
 from enrich import normalize as N
 from enrich.critic_scores import extract_critic_scores
-from scrapers.base import strip_html
+from scrapers.base import strip_html, warn_page_cap
 from models import Wine
 
 
@@ -77,11 +77,19 @@ def common_wine(obj, source_key) -> Wine:
     )
 
 
+def in_stock(obj) -> bool:
+    """Store API exposes is_in_stock; treat a missing flag as in stock."""
+    return obj.get("is_in_stock") is not False
+
+
 def fetch_all(session, base, path, params, max_pages=80):
     """Paginate a WooCommerce Store-API endpoint until a short/empty page."""
     out, page = [], 1
     per_page = params.get("per_page", 100)
-    while page <= max_pages:
+    while True:
+        if page > max_pages:
+            warn_page_cap(base, max_pages)
+            break
         p = dict(params, page=page)
         batch = session.get_json(base + path, p)
         if not isinstance(batch, list) or not batch:

@@ -42,7 +42,8 @@ class Wine:
     review_rating: Optional[float] = None               # store review stars 0-5
     review_count: Optional[int] = None
     # computed by enrichment
-    quality: Optional[float] = None         # 0-1
+    quality: Optional[float] = None         # 0-1, calibrated from real ratings
+    quality_est: Optional[float] = None     # 0-1 typical-for-type estimate when unrated
     price_efficiency: Optional[float] = None  # 0-1
     cross_site_gap: Optional[float] = None    # 0-1
     value_score: Optional[float] = None       # 0-100

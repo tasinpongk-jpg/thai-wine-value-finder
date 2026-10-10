@@ -53,9 +53,8 @@ always instant. Re-run `scrape.py` whenever you want fresh prices.
 Every wine gets a score out of 100 built from three parts (you can re-sort the
 dashboard by any single part):
 
-- **Quality** — the wine's rating, normalized to 0–1 (Vivino stars, or critic
-  points like "JS 95" when a shop prints them).
-- **Price efficiency** — quality per baht. Bang for buck.
+- **Quality** — the wine's rating on one calibrated 0–1 scale (see below).
+- **Price efficiency** — quality per baht (per 750 ml). Bang for buck.
 - **Cross-site discount** — how much cheaper this listing is than the *same wine*
   on the other shops.
 
@@ -65,8 +64,27 @@ Prices are compared **per 750 ml**, so a half bottle or magnum isn't mistaken fo
 a bargain or a rip-off. Bottle size comes from the product name when it states one
 (e.g. "(375ml)", "1.5L", "750 มล.", "Magnum"), otherwise from the shop's attribute.
 
-Wines with no rating still show up — they're just scored on price/discount only,
-so they rank a bit lower (and are easy to filter out).
+### One rating scale
+Vivino stars and critic points are converted to the same 100-point scale before
+scoring, so a 4.0★ Vivino wine and a 90-point critic wine count as equal quality:
+
+| Vivino | ≈ points | quality |
+|---:|---:|---:|
+| 3.5★ | 86 | 0.40 |
+| 4.0★ | 90 | 0.67 |
+| 4.5★ | 94 | 0.93 |
+
+`points = 90 + (stars − 4.0) × 8`, `quality = (points − 80) / 15` (clamped to 0–1).
+If a wine has both a Vivino rating and critic scores, the two are averaged.
+
+### Unrated wines
+Most listings outside Spirit House have no rating. Instead of scoring them on
+discount alone (which capped them at ~20/100), they get an **estimated quality**:
+the median quality of rated wines of the same type (red, white, …), with a small
+5% uncertainty discount. They're then scored exactly like rated wines, so among
+unrated wines of a type the cheaper one (per 750 ml) ranks higher, and an unrated
+wine only beats a rated one of typical quality if it's cheaper. The dashboard
+labels this "Quality (est.)", and "has a rating" filters still mean a real rating.
 
 ### Where ratings come from
 - **Spirit House** publishes a Vivino rating for nearly every wine — used directly.

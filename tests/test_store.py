@@ -44,3 +44,18 @@ def test_price_history_dedups_unchanged(tmp_path):
     store.save(make(100), db)
     hist = store.read_price_history(db, "s", "1")
     assert len(hist) == 1
+
+
+def test_init_db_adds_new_wine_columns_to_old_database(tmp_path):
+    import sqlite3
+    db = str(tmp_path / "old.db")
+    conn = sqlite3.connect(db)
+    old_cols = [c for c in store.COLUMNS if c != "quality_est"]
+    conn.execute(f'CREATE TABLE wines ({", ".join(chr(34) + c + chr(34) for c in old_cols)}, '
+                 'PRIMARY KEY (source, source_id))')
+    conn.commit()
+    conn.close()
+    store.save([Wine(source="a", source_id="1", name="x", price_thb=500,
+                     quality_est=0.5)], db)
+    rows = store.read_wines(db)
+    assert rows[0]["quality_est"] == 0.5

@@ -280,13 +280,13 @@ function whyText(wine) {
   const quality = value(wine, "quality");
   const efficiency = value(wine, "price_efficiency");
   if (quality != null && quality >= .8) return "Rated highly";
-  if (efficiency != null && efficiency >= .7) return "Strong quality per baht";
+  if (efficiency != null && efficiency >= .7) return quality == null ? "Low price for its type (unrated)" : "Strong quality per baht";
   return "Good catalog value";
 }
 
 function cardMarkup(wine) {
   const score = value(wine, "value_score") || 0;
-  const quality = (value(wine, "quality") || 0) * 45;
+  const quality = (qualityOrEstimate(wine) || 0) * 45;
   const efficiency = (value(wine, "price_efficiency") || 0) * 35;
   const discount = (value(wine, "cross_site_gap") || 0) * 20;
   const meta = [wine.wine_type, wine.country, wine.vintage].filter((item) => item != null && item !== "").join(" · ");
@@ -380,6 +380,12 @@ function detailBadges(wine) {
     .filter((item) => item != null && item !== "").map((item) => `<span class="badge">${esc(item)}</span>`).join("");
 }
 
+// Unrated wines are scored with a typical-for-type estimate (quality_est).
+function qualityOrEstimate(wine) {
+  const quality = value(wine, "quality");
+  return quality != null ? quality : value(wine, "quality_est");
+}
+
 function scoreBar(label, color, normalized, weight) {
   const score = (normalized || 0) * weight;
   return `<div class="score-bar"><div><span>${esc(label)}</span><span>${score.toFixed(0)} / ${weight}</span></div><div><i style="width:${(normalized || 0) * 100}%;background:${color}"></i></div></div>`;
@@ -402,7 +408,7 @@ function showDetail(id) {
   $("#dialogBody").innerHTML = `<div class="detail">
     <div class="detail-top">${image ? `<img class="detail-img" src="${esc(image)}" alt="">` : imageMarkup(wine, "detail-img")}<div><div class="badges">${detailBadges(wine)}</div><h2>${esc(wine.name)}</h2><div class="detail-sub">${esc(meta)}</div><div class="price-rating"><span class="price"><small>฿</small>${fmtPrice(wine.price_thb)}</span>${ratingMarkup(wine)}</div></div></div>
     ${wine.description ? `<p class="detail-description">${esc(wine.description)}</p>` : ""}
-    <div class="score-ledger"><div class="score-number">${(value(wine,"value_score") || 0).toFixed(0)}<small>VALUE</small></div><div>${scoreBar("Quality", "#c8a24c", value(wine,"quality"), 45)}${scoreBar("Price efficiency", "#b23047", value(wine,"price_efficiency"), 35)}${scoreBar("Cross-shop discount", "#7fa0b4", value(wine,"cross_site_gap"), 20)}</div></div>
+    <div class="score-ledger"><div class="score-number">${(value(wine,"value_score") || 0).toFixed(0)}<small>VALUE</small></div><div>${scoreBar(value(wine,"quality") != null ? "Quality" : "Quality (est.)", "#c8a24c", qualityOrEstimate(wine), 45)}${scoreBar("Price efficiency", "#b23047", value(wine,"price_efficiency"), 35)}${scoreBar("Cross-shop discount", "#7fa0b4", value(wine,"cross_site_gap"), 20)}</div></div>
     <section class="detail-section"><h3>Tasting profile</h3>${notes || '<div class="empty">No tasting notes published for this bottle.</div>'}</section>
     ${comparisons ? `<section class="detail-section"><h3>Same wine, other shops</h3>${comparisons}</section>` : ""}
     ${shopUrl ? `<div class="detail-actions"><a class="link-button" href="${esc(shopUrl)}" target="_blank" rel="noopener noreferrer">View at ${esc(wine.site)}</a></div>` : ""}
