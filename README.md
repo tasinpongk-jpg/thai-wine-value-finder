@@ -36,6 +36,18 @@ That's the whole thing — **two commands**. `scrape.py` does the slow web work 
 saves to a small database; `dashboard.py` just reads that database, so viewing is
 always instant. Re-run `scrape.py` whenever you want fresh prices.
 
+> **About `data/wine.db` on `main`:** it's an old snapshot kept so the app works
+> straight after cloning — prices in it can be weeks out of date. The daily
+> refresh publishes fresh data to the rolling `catalog` branch instead (main
+> isn't touched). To use the latest catalog without scraping:
+>
+> ```bash
+> git fetch origin catalog
+> git show origin/catalog:data/wine.db > data/wine.db
+> ```
+>
+> or run `python daily_refresh.py` / `python scrape.py` to build your own.
+
 ### What the dashboard does
 - **Top Picks** — best-value bottles as cards (with bottle photos) and a "Value Seal".
 - **Browse & taste** — every bottle in a sortable list; click one to open its
@@ -130,7 +142,7 @@ scrapers/          one file per shop + shared helpers
 enrich/            normalize, critic scores, Vivino, matching, value score
 store.py           SQLite (current prices + price history over time)
 catalog.py         validate + merge + rescore + atomically save (shared pipeline)
-data/              tracked public wine catalog + private local cellar and cache
+data/              wine.db (stale snapshot on main; fresh on `catalog`) + private cellar and cache
 tests/             pytest (pure logic + fixture-based parser tests)
 SPEC.md            full design + the verified scraping recipes
 ```

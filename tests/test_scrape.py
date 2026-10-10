@@ -80,3 +80,23 @@ def test_summary_handles_missing_price_and_score(capsys):
     scrape._summary(wines, "x.db")  # used to raise TypeError on None price
     out = capsys.readouterr().out
     assert "Unpriced but rated" in out
+
+
+def test_summary_counts_and_orders_top_ten(capsys):
+    wines = [Wine(source="s", source_id=str(i), name=f"Wine {i}", price_thb=100.0 * (i + 1),
+                  quality=0.5 if i % 2 else None, value_score=float(i))
+             for i in range(12)]
+    scrape._summary(wines, "x.db")
+    out = capsys.readouterr().out
+    assert "Saved 12 wines -> x.db" in out
+    assert "with a quality rating: 6 (50%)" in out
+    lines = [ln for ln in out.splitlines() if "| q=" in ln]
+    assert len(lines) == 10
+    assert lines[0].strip().startswith("11.0") and "Wine 11" in lines[0]
+    assert "Wine 0" not in out and "Wine 1\n" not in out
+
+
+def test_summary_empty_catalog(capsys):
+    scrape._summary([], "x.db")
+    out = capsys.readouterr().out
+    assert "Saved 0 wines" in out and "(0%)" in out
