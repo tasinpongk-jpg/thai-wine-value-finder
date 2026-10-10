@@ -58,6 +58,10 @@ dashboard by any single part):
 
 Score = `45% quality + 35% price-efficiency + 20% cross-site discount`.
 
+Prices are compared **per 750 ml**, so a half bottle or magnum isn't mistaken for
+a bargain or a rip-off. Bottle size comes from the product name when it states one
+(e.g. "(375ml)", "1.5L", "750 มล.", "Magnum"), otherwise from the shop's attribute.
+
 Wines with no rating still show up — they're just scored on price/discount only,
 so they rank a bit lower (and are easy to filter out).
 
@@ -76,7 +80,7 @@ python scrape.py --no-cache              # ignore the 1-day cache, fetch fresh
 python daily_refresh.py                   # safe live refresh with last-good fallbacks
 python scrape.py --sites wishbeer        # only some shops
 python scrape.py --vivino 200            # also try up to 200 Vivino lookups
-python -m pytest -q                      # run the test suite (85 tests)
+python -m pytest -q                      # run the test suite
 ```
 
 ## Project layout
@@ -89,6 +93,7 @@ models.py          the Wine data shape
 scrapers/          one file per shop + shared helpers
 enrich/            normalize, critic scores, Vivino, matching, value score
 store.py           SQLite (current prices + price history over time)
+catalog.py         validate + merge + rescore + atomically save (shared pipeline)
 data/              tracked public wine catalog + private local cellar and cache
 tests/             pytest (pure logic + fixture-based parser tests)
 SPEC.md            full design + the verified scraping recipes
@@ -96,6 +101,11 @@ SPEC.md            full design + the verified scraping recipes
 
 ## Notes & caveats
 
+- **Partial runs are safe** — `scrape.py --sites X` replaces only shop X's rows
+  (delisted wines disappear), keeps the other shops' last-good rows, and re-matches
+  and re-scores the whole catalog. Both `scrape.py` and `daily_refresh.py` drop
+  listings priced below ฿150 per 750 ml (a wrong currency or placeholder) and keep
+  a shop's previous snapshot if too few listings survive.
 - **Refresh is automatic** — GitHub Actions runs at 06:30 Asia/Bangkok every day
   and publishes a rolling `catalog` branch for Cloudflare. A failed or suspiciously
   small shop response keeps that shop's last-good snapshot. Run
