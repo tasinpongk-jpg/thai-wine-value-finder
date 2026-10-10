@@ -22,8 +22,11 @@ Currently **~2,300 bottles**, ~2,000 distinct after matching the same wine acros
 
 ## Quick start
 
+Needs Python 3.11+.
+
 ```bash
-pip install -r requirements.txt   # one time
+python -m venv .venv && source .venv/bin/activate   # Windows: .venv\Scripts\activate
+pip install -r requirements.txt   # one time (pinned, locked versions)
 
 python scrape.py                  # 1) gather + score everything -> data/wine.db
 streamlit run dashboard.py        # 2) open the dashboard in your browser
@@ -98,7 +101,22 @@ python scrape.py --no-cache              # ignore the 1-day cache, fetch fresh
 python daily_refresh.py                   # safe live refresh with last-good fallbacks
 python scrape.py --sites wishbeer        # only some shops
 python scrape.py --vivino 200            # also try up to 200 Vivino lookups
-python -m pytest -q                      # run the test suite
+```
+
+### Development
+
+```bash
+pip install -r requirements-dev.txt      # runtime + pytest + ruff (locked)
+ruff check .                             # lint (same as CI)
+python -m pytest -q                      # tests, incl. Streamlit AppTest smoke tests
+```
+
+Dependencies are declared in `requirements.in` / `requirements-dev.in` and locked
+with [uv](https://docs.astral.sh/uv/). After changing a `.in` file, re-lock:
+
+```bash
+uv pip compile --universal --python-version 3.11 requirements.in -o requirements.txt
+uv pip compile --universal --python-version 3.11 requirements-dev.in -o requirements-dev.txt
 ```
 
 ## Project layout
@@ -168,3 +186,24 @@ The full Streamlit app still runs locally or on any container host:
 npm run docker:build
 docker run --rm -p 8501:8501 thai-wine-value-finder
 ```
+
+The container listens on all interfaces, so anyone who can reach port 8501 can
+use it. Set a cellar password or public mode (below) before exposing it.
+
+## Sharing the dashboard safely
+
+The Streamlit app has three cellar modes:
+
+| Mode | How | Cellar |
+|---|---|---|
+| Local (default) | nothing set; Streamlit binds to `127.0.0.1` only | open |
+| Password | `cellar_password = "…"` in `.streamlit/secrets.toml`, or `WINEVALUE_CELLAR_PASSWORD` env | hidden until the password is entered in the My Cellar tab |
+| Public / read-only | `WINEVALUE_PUBLIC_MODE=1` env, or `public_mode = true` in secrets | hidden, no writes at all |
+
+- `Put wine site online.cmd` / `share.ps1` start a **separate read-only copy** on
+  port 8502 (public mode) and tunnel only that, so a trycloudflare link never
+  exposes your cellar. Your normal dashboard on 8501 isn't shared.
+- `fly.toml` deploys in public mode. To use the cellar on Fly, remove
+  `WINEVALUE_PUBLIC_MODE` and run `fly secrets set WINEVALUE_CELLAR_PASSWORD=…`.
+- Streamlit's XSRF and CORS protection are on (`.streamlit/config.toml`).
+  `.streamlit/secrets.toml` is git- and docker-ignored.

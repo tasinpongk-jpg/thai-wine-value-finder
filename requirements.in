@@ -1,0 +1,9 @@
+# Runtime dependencies (direct). Edit this file, then re-lock:
+#   uv pip compile --universal --python-version 3.11 requirements.in -o requirements.txt
+requests>=2.31
+beautifulsoup4>=4.12
+lxml>=5.0
+rapidfuzz>=3.0
+pandas>=2.0
+streamlit>=1.30
+plotly>=5.18

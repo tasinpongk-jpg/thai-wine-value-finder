@@ -1,6 +1,12 @@
 # Fly.io config for the Thai Wine Value Finder.
 # `fly launch --no-deploy` will set/confirm `app` and create the volume;
-# then `fly deploy`. See DEPLOY.md.
+# then `fly deploy`.
+#
+# A Fly app is on the public internet, so it runs in PUBLIC (read-only) mode:
+# the cellar is hidden. To use the cellar here instead, delete the
+# WINEVALUE_PUBLIC_MODE line and set a password as a Fly secret:
+#   fly secrets set WINEVALUE_CELLAR_PASSWORD='something-long'
+# Visitors then need that password to see or change the cellar.
 app = "thai-wine-value"
 primary_region = "sin"  # Singapore — closest Fly region to Thailand
 
@@ -8,6 +14,7 @@ primary_region = "sin"  # Singapore — closest Fly region to Thailand
 
 [env]
   WINEVALUE_CELLAR_DB = "/data/cellar.db"
+  WINEVALUE_PUBLIC_MODE = "1"
 
 [http_service]
   internal_port = 8501

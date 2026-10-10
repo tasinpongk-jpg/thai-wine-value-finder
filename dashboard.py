@@ -15,9 +15,10 @@ import pandas as pd
 import plotly.express as px
 import streamlit as st
 
+import access
 import store
 from sources import SOURCES
-from enrich.cellar import drink_window, current_price_lookup
+from enrich.cellar import drink_window
 
 st.set_page_config(page_title="Thai Wine Value Finder", page_icon="🍷",
                    layout="wide", initial_sidebar_state="collapsed")
@@ -33,9 +34,13 @@ TYPE_DOT = {"Red": CLARET, "White": "#D8C27A", "Rosé": "#E0828F", "Sparkling": 
 SITE_COLORS = {"Spirit House": CLARET, "Wine Store Asia": SLATE, "Wishbeer": "#9C6B74", "Wine Duty Free": "#8A7C70"}
 NOTE_COLORS = {"appearance": BRASS, "nose": CLARET, "palate": SLATE, "pairing": MUTED}
 PAGE_SIZE = 15
-PUBLIC_MODE = os.environ.get("WINEVALUE_PUBLIC_MODE", "").lower() in {
-    "1", "true", "yes", "on",
-}
+# Cellar access (see access.py): hidden on public deployments, password-locked
+# when a cellar_password is configured, open for plain local use.
+PUBLIC_MODE = access.is_public(os.environ, st.secrets)
+CELLAR_PASSWORD = access.cellar_password(os.environ, st.secrets)
+CELLAR_MODE = access.cellar_mode(PUBLIC_MODE, CELLAR_PASSWORD,
+                                 bool(st.session_state.get("cellar_unlocked")))
+CELLAR_OPEN = CELLAR_MODE == access.OPEN
 
 CSS = """
 <style>
@@ -399,8 +404,11 @@ def tasting_dialog(wine, full_df, db):
     if has(wine.get("url")):
         st.link_button(f"View at {wine['site']} ↗", wine["url"])
 
-    if PUBLIC_MODE:
+    if CELLAR_MODE == access.HIDDEN:
         st.caption("Cellar tracking is available in local deployments only.")
+        return
+    if CELLAR_MODE == access.LOCKED:
+        st.caption("🔒 Unlock the cellar in the My Cellar tab to record purchases.")
         return
 
     owned = [p for p in store.read_purchases(db)
@@ -530,13 +538,16 @@ def _now_price(p):
 
 
 def _save_rating(pid):
+    if not CELLAR_OPEN:
+        return
     v = st.session_state.get(f"rate{pid}")
     if v is not None:
         store.set_purchase_rating(pid, int(v) + 1, CELLAR_DB)
 
 
-cellar_n = 0 if PUBLIC_MODE else len(store.read_purchases(CELLAR_DB))
-tabs = st.tabs(["🏆 Top Picks", "🔍 Browse & taste", f"🍷 My Cellar ({cellar_n})", "📊 Insights"])
+cellar_label = (f"🍷 My Cellar ({len(store.read_purchases(CELLAR_DB))})" if CELLAR_OPEN
+                else "🍷 My Cellar")
+tabs = st.tabs(["🏆 Top Picks", "🔍 Browse & taste", cellar_label, "📊 Insights"])
 
 # ---- Top Picks ----
 with tabs[0]:
@@ -597,11 +608,22 @@ with tabs[1]:
 
 # ---- My Cellar ----
 with tabs[2]:
-    purchases = [] if PUBLIC_MODE else store.read_purchases(CELLAR_DB)
-    if PUBLIC_MODE:
+    purchases = store.read_purchases(CELLAR_DB) if CELLAR_OPEN else []
+    if CELLAR_MODE == access.HIDDEN:
         st.markdown('<div class="empty-panel">Cellar tracking is disabled on the public site. '
                     'Run the app locally to keep a private purchase history.</div>',
                     unsafe_allow_html=True)
+    elif CELLAR_MODE == access.LOCKED:
+        st.markdown('<div class="empty-panel">🔒 The cellar is password-protected.</div>',
+                    unsafe_allow_html=True)
+        with st.form("cellar_unlock"):
+            pw = st.text_input("Cellar password", type="password", key="cellar_pw")
+            if st.form_submit_button("Unlock"):
+                if access.password_matches(pw, CELLAR_PASSWORD):
+                    st.session_state["cellar_unlocked"] = True
+                    st.rerun()
+                else:
+                    st.error("Wrong password.")
     elif not purchases:
         st.markdown('<div class="empty-panel">Your cellar is empty. Open any wine\'s tasting '
                     'card and tap <b>＋ Add to my cellar</b> to start tracking what you buy.</div>',

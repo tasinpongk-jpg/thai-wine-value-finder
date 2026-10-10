@@ -17,8 +17,12 @@ jobs:
         with:
           python-version: 3.11
           cache: pip
-      - run: pip install -r requirements.txt
-      - run: python -m pytest -q
+          cache-dependency-path: requirements-dev.txt
+      - run: pip install -r requirements-dev.txt
+      - name: Lint (ruff)
+        run: ruff check .
+      - name: Tests (incl. Streamlit AppTest smoke tests)
+        run: python -m pytest -q
       - uses: actions/setup-node@v7
         with:
           node-version: 22
