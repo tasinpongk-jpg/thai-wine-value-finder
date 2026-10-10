@@ -1,5 +1,3 @@
-import math
-
 from enrich import value as V
 from models import Wine
 

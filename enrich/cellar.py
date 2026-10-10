@@ -5,8 +5,6 @@ bottle is one to hold, drink, or has likely peaked. Adjust to taste.
 """
 from __future__ import annotations
 
-from typing import Optional
-
 
 def drink_window(vintage, wine_type, body=None, now_year=None) -> dict:
     """Return {start, end, status, label} for a bottle.
