@@ -48,6 +48,7 @@ narwhals==2.27.1
     #   plotly
 numpy==2.4.6
     # via
+    #   -r requirements.in
     #   pandas
     #   pydeck
     #   streamlit

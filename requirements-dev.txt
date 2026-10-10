@@ -81,6 +81,7 @@ narwhals==2.27.1
 numpy==2.4.6
     # via
     #   -c requirements.txt
+    #   -r requirements.in
     #   pandas
     #   pydeck
     #   streamlit
